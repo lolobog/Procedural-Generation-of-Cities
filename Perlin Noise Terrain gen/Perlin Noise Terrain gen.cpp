@@ -26,6 +26,17 @@ int main()
 
                 if (pNoise.nOctaveCount == 9)
                     pNoise.nOctaveCount = 1;
+                if (event.key.code == sf::Keyboard::Z)
+                {
+                    pNoise.seed.clear();
+                    gManager.ClearGridColor();
+                    for (int i = 0; i < pNoise.outputSize; i++)
+                    {
+                        pNoise.seed.push_back((float)rand() / (float)RAND_MAX);
+                        
+                    }
+                    std::cout << "Reset seed\n";
+                }
             }
 
 

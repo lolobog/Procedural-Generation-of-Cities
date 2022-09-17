@@ -57,6 +57,7 @@ public:
 
 	void DrawGrid();
 
+	void ClearGridColor();
 	
 
 private:

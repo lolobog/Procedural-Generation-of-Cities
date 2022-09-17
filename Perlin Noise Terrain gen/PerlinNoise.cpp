@@ -48,9 +48,9 @@ void PerlinNoise::DrawPerlinNoise1D()
 	for (int i = 0; i < outputSize; i++)
 	{
 	
-		for (int j = 0; j < ceil((noise[i] * outputSize )); j++)
+		for (int j = 0; (j < ceil(noise[i] * outputSize )&&(j<outputSize/2)); j++)
 		{
-			pGrid->GridCells[outputSize/2-1-j][i].CellShape.setFillColor(sf::Color::Green);
+			pGrid->GridCells[outputSize/2-j][i].CellShape.setFillColor(sf::Color::Green);
 		}
 		
 	}

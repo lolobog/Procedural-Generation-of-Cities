@@ -22,6 +22,8 @@ public:
 	void PerlinNoise1D();
 
 	void DrawPerlinNoise1D();
+
+	
 	
 
 

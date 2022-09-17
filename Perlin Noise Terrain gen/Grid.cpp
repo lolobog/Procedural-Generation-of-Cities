@@ -37,3 +37,14 @@ void GridManager::DrawGrid()
 		}
 	}
 }
+
+void GridManager::ClearGridColor()
+{
+	for (int i = 0; i < singleton.Instance()->ScreenWidth; i = i + cellSize)
+	{
+		for (int j = 0; j < singleton.Instance()->ScreenHeight; j = j + cellSize)
+		{
+			GridCells[i / cellSize][j / cellSize].CellShape.setFillColor(sf::Color::White);
+		}
+	}
+}
