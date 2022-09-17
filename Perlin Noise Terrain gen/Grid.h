@@ -5,6 +5,8 @@
 #include <iostream>
 
 
+
+
 class Cell
 {
 
@@ -13,20 +15,23 @@ private:
 	
 public:
 	sf::RectangleShape CellShape;
+	float cellSize = 5;
 
 	Cell(float xPos, float yPos) 
 	{ 
 		ScreenPosition=sf::Vector2f(xPos, yPos); 
-		CellShape.setSize(sf::Vector2f(50.0f, 50.0f));
+		CellShape.setSize(sf::Vector2f(cellSize, cellSize));
 		CellShape.setOutlineThickness(1.0f);
 		CellShape.setOutlineColor(sf::Color::Black);
 		CellShape.setOrigin(ScreenPosition);
 	}
+	Cell() {};
 	~Cell() {};
 
 	void SetCellPosition(float x,float y)
 	{
 		ScreenPosition = sf::Vector2f(x, y);
+		CellShape.setOrigin(ScreenPosition);
 	}
 
 	void SetCellSize(float x, float y)
@@ -40,9 +45,9 @@ public:
 	
 };
 
-class GridManager
+class GridManager:public Cell
 {
-
+	
 
 public:
 	GridManager(sf::RenderWindow* window);

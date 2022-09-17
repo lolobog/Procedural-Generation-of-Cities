@@ -10,10 +10,10 @@ GridManager::GridManager(sf::RenderWindow* window)
 
 	pWindow = window;
 	
-	for (int j = 0; j <= singleton.Instance()->ScreenHeight; j = j + 50)
+	for (int j = 0; j <singleton.Instance()->ScreenHeight; j = j + cellSize)
 	{
 		std::vector<Cell> temp;
-		for (int i = 0; i <= singleton.Instance()->ScreenWidth; i = i + 50)
+		for (int i = 0; i < singleton.Instance()->ScreenWidth; i = i + cellSize)
 		{
 			temp.push_back(Cell(-i, -j));
 		}
@@ -29,11 +29,11 @@ GridManager::~GridManager()
 
 void GridManager::DrawGrid()
 {
-	for (int i = 0; i <= singleton.Instance()->ScreenWidth; i = i + 50)
+	for (int i = 0; i < singleton.Instance()->ScreenWidth; i = i + cellSize)
 	{
-		for (int j = 0; j <= singleton.Instance()->ScreenHeight; j = j + 50)
+		for (int j = 0; j < singleton.Instance()->ScreenHeight; j = j + cellSize)
 		{
-			pWindow->draw(GridCells[i/50][j/50].CellShape);
+			pWindow->draw(GridCells[i/ cellSize][j/ cellSize].CellShape);
 		}
 	}
 }

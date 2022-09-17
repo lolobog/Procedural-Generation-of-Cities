@@ -147,9 +147,11 @@
   <ItemGroup>
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Perlin Noise Terrain gen.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="Variables.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
