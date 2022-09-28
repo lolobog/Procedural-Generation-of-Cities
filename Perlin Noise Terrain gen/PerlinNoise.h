@@ -10,18 +10,30 @@ private:
 public:
 	PerlinNoise(GridManager* grid);
 	~PerlinNoise();
+
 	Singleton singleton;
-	
-	int outputSize ;
+	int nOctaveCount = 1;
+	float bias = 2;
+
+// For 1D generation
+	int outputSize ; 
 	std::vector <float> seed;
 	std::vector<float>noise;
 
-	int nOctaveCount = 1;
-
+//For 2D generation
+	int outputWitdth= singleton.Instance()->ScreenWidth;
+	int outputHeight= singleton.Instance()->ScreenHeight;
+	std::vector <float> seed2D;
+	std::vector<float>noise2D;
+	
 
 	void PerlinNoise1D();
 
+	void PerlinNoise2D();
+
 	void DrawPerlinNoise1D();
+
+	void DrawPerlinNoise2D();
 
 	
 	

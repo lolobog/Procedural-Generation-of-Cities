@@ -8,6 +8,11 @@ PerlinNoise::PerlinNoise(GridManager* grid)
 	{
 		seed.push_back((float)rand() / (float)RAND_MAX);
 	}
+
+	for (int j = 0; j < outputHeight * outputWitdth; j++)
+	{
+		seed2D.push_back((float)rand() / (float)RAND_MAX);
+	}
 }
 
 PerlinNoise::~PerlinNoise()
@@ -34,7 +39,7 @@ void PerlinNoise::PerlinNoise1D()
 				float fSample = (1.0f - fBlend) * seed[Sample1] + fBlend * seed[Sample2];
 				fNoise += fSample * fScale;
 				fScaleAcc += fScale;
-				fScale = fScale / 2.0f;
+				fScale = fScale / bias;
 			}
 			noise.push_back(fNoise / fScaleAcc);
 		}
@@ -43,15 +48,73 @@ void PerlinNoise::PerlinNoise1D()
 	
 }
 
+
+void PerlinNoise::PerlinNoise2D()
+{
+	if (noise2D.size() == outputHeight * outputWitdth)
+		noise2D.clear();
+
+	for (int x = 0; x < outputWitdth; x++)
+	{
+		for (int y = 0; y < outputHeight; y++)
+		{
+			float fNoise = 0.0f;
+			float fScale = 1.0f;
+			float fScaleAcc = 0.0f;
+			for (int o = 0; o < nOctaveCount; o++)
+			{
+				int nPitch = outputWitdth>> o;
+
+				int Sample1X = (x / nPitch) * nPitch;
+				int Sample1Y = (y / nPitch) * nPitch;
+
+				int Sample2X = (Sample1X +nPitch) % outputWitdth;
+				int Sample2Y = (Sample1Y + nPitch) % outputHeight;
+
+				float fBlendX = (float)(x - Sample1X) / (float)nPitch;
+				float fBlendY = (float)(x - Sample1Y) / (float)nPitch;
+
+				float fSample1 = (1.0f - fBlendX) * seed2D[Sample1Y*Sample1X] + fBlendX * seed2D[Sample1Y * Sample2X];
+				float fSample2 = (1.0f - fBlendX) * seed2D[Sample2Y  * Sample2X] + fBlendX * seed2D[Sample2Y   * Sample2X];
+
+				fNoise += (fBlendY * (fSample2 - fSample1) + fSample1) * fScale;
+				fScaleAcc += fScale;
+				fScale = fScale / bias;
+			}
+			noise2D.push_back(fNoise / fScaleAcc);
+		}
+	}
+
+
+
+}
+
 void PerlinNoise::DrawPerlinNoise1D()
 {
 	for (int i = 0; i < outputSize; i++)
 	{
 	
-		for (int j = 0; (j < ceil(noise[i] * outputSize )&&(j<outputSize/2)); j++)
+		for (int j = 0; (j < ceil(noise[i] * outputSize )); j++)
 		{
-			pGrid->GridCells[outputSize/2-j][i].CellShape.setFillColor(sf::Color::Green);
+			pGrid->GridCells[outputSize-j-1][i].CellShape.setFillColor(sf::Color::Green);
 		}
 		
+	}
+}
+
+void PerlinNoise::DrawPerlinNoise2D()
+{
+	int x = 0;
+
+	for (int i = 0; i < outputSize; i++)
+	{
+		
+		for (int j = 0;j < outputSize; j++)
+		{
+			sf::Color cellColor(noise2D[x] * 100, noise2D[x] * 100, noise2D[x] * 100, 255);
+			pGrid->GridCells[j][i].CellShape.setFillColor(cellColor);
+			x++;
+		}
+		std::cout << "Line drawn\n";
 	}
 }
