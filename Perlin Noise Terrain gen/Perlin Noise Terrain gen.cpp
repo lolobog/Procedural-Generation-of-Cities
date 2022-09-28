@@ -31,11 +31,16 @@ int main()
                 if (event.key.code == sf::Keyboard::Z)
                 {
                     pNoise.seed.clear();
+                    pNoise.seed2D.clear();
                     gManager.ClearGridColor();
                     for (int i = 0; i < pNoise.outputSize; i++)
                     {
                         pNoise.seed.push_back((float)rand() / (float)RAND_MAX);
                         
+                    }
+                    for (int j = 0; j < pNoise.outputHeight * pNoise.outputWitdth; j++)
+                    {
+                        pNoise.seed2D.push_back((float)rand() / (float)RAND_MAX);
                     }
                     std::cout << "Reset seed\n";
                 }

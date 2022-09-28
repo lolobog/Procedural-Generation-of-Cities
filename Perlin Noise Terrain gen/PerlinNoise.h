@@ -24,7 +24,8 @@ public:
 	int outputWitdth= singleton.Instance()->ScreenWidth;
 	int outputHeight= singleton.Instance()->ScreenHeight;
 	std::vector <float> seed2D;
-	std::vector<float>noise2D;
+	float *noise2D= new float[outputHeight * outputWitdth];
+	
 	
 
 	void PerlinNoise1D();
