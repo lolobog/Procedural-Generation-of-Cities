@@ -1,6 +1,4 @@
 ﻿  PerlinNoise.cpp
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\PerlinNoise.cpp(6,49): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\PerlinNoise.cpp(115,130): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\PerlinNoise.cpp(115,92): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\PerlinNoise.cpp(115,54): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-  Perlin Noise Terrain gen.vcxproj -> D:\Perlin-Noise-Terrain-Generation\Debug\Perlin Noise Terrain gen.exe
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\PerlinNoise.cpp(6,49): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\PerlinNoise.cpp(115,16): warning C4244: 'initializing': conversion from 'float' to 'uint8_t', possible loss of data
+  Perlin Noise Terrain gen.vcxproj -> D:\S210641\Projects\Perlin Noise Terrain gen\Debug\Perlin Noise Terrain gen.exe

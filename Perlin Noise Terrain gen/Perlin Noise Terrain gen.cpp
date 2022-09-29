@@ -4,6 +4,7 @@
 
 int main()
 {
+    srand(time(NULL));
     Singleton singleton;
     sf::RenderWindow window(sf::VideoMode(singleton.Instance()->ScreenWidth, singleton.Instance()->ScreenHeight), "Perlin Noise Terrain");
     GridManager gManager(&window);

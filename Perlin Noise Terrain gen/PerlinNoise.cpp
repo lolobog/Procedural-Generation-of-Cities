@@ -69,14 +69,14 @@ void PerlinNoise::PerlinNoise2D()
 				int Sample1X = (x / nPitch) * nPitch;
 				int Sample1Y = (y / nPitch) * nPitch;
 
-				int Sample2X = (Sample1X +nPitch) % outputWitdth;
-				int Sample2Y = (Sample1Y + nPitch) % outputHeight;
+				int Sample2X = (Sample1X + nPitch)% outputWitdth;
+				int Sample2Y = (Sample1Y + nPitch)% outputHeight;
 
 				float fBlendX = (float)(x - Sample1X) / (float)nPitch;
 				float fBlendY = (float)(y - Sample1Y) / (float)nPitch;
 
 				float fSample1 = (1.0f - fBlendX) * seed2D[Sample1Y* outputWitdth +Sample1X] + fBlendX * seed2D[Sample1Y * outputWitdth + Sample2X];
-				float fSample2 = (1.0f - fBlendX) * seed2D[Sample2Y * outputWitdth + Sample2X] + fBlendX * seed2D[Sample2Y * outputWitdth + Sample2X];
+				float fSample2 = 1;// (1.0f - fBlendX)* seed2D[Sample2Y * outputWitdth + Sample2X] + fBlendX * seed2D[Sample2Y * outputWitdth + Sample2X];
 
 				fNoise += (fBlendY * (fSample2 - fSample1) + fSample1) * fScale;
 				fScaleAcc += fScale;
@@ -112,7 +112,8 @@ void PerlinNoise::DrawPerlinNoise2D()
 		
 		for (int y = 0;y < outputSize; y++)
 		{
-			sf::Color cellColor(noise2D[y * outputWitdth + x] * 1000, noise2D[y * outputWitdth + x] * 1000, noise2D[y * outputWitdth + x] * 1000, 255);
+			uint8_t col = noise2D[y * outputWitdth + x] * 255;
+			sf::Color cellColor(col, col, col, 255);
 			pGrid->GridCells[x][y].CellShape.setFillColor(cellColor);
 			
 		}
