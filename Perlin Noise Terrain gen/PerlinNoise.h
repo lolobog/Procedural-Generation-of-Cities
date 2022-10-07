@@ -21,11 +21,11 @@ public:
 	std::vector<float>noise;
 
 	//For 2D generation
-	int outputWitdth = singleton.Instance()->ScreenWidth;
-	int outputHeight = singleton.Instance()->ScreenHeight;
+	int outputWitdth = ScreenWidth;
+	int outputHeight = ScreenHeight;
 	std::vector <float> seed2D;
 	float* noise2D = new float[outputHeight * outputWitdth];
-	float* noise2D2 = new float[.\][outputWitdth];
+
 	
 	
 

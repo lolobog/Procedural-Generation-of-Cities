@@ -6,7 +6,7 @@ int main()
 {
     srand(time(NULL));
     Singleton singleton;
-    sf::RenderWindow window(sf::VideoMode(singleton.Instance()->ScreenWidth, singleton.Instance()->ScreenHeight), "Perlin Noise Terrain");
+    sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
     GridManager gManager(&window);
     PerlinNoise pNoise(&gManager);
   
@@ -65,12 +65,12 @@ int main()
                 window.close();
         }
        // pNoise.PerlinNoise1D();
-        pNoise.PerlinNoise2D();
+        pNoise.PerlinNoise1D();
       
         window.clear(sf::Color::Black);
 
       //  pNoise.DrawPerlinNoise1D();
-        pNoise.DrawPerlinNoise2D();
+        pNoise.DrawPerlinNoise1D();
         gManager.DrawGrid();
 
 

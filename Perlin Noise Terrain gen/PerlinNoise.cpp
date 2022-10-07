@@ -3,7 +3,7 @@
 PerlinNoise::PerlinNoise(GridManager* grid)
 {
 	pGrid = grid;
-	outputSize = singleton.Instance()->ScreenWidth / grid->cellSize;
+	outputSize = ScreenWidth / grid->cellSize;
 	for (int i = 0; i < outputSize; i++)
 	{
 		seed.push_back((float)rand() / (float)RAND_MAX);
@@ -64,7 +64,7 @@ void PerlinNoise::PerlinNoise2D()
 			float fScaleAcc = 0.0f;
 			for (int o = 0; o < nOctaveCount; o++)
 			{
-				int nPitch = outputWitdth>> o;
+				int nPitch = outputWitdth >> o;
 
 				int Sample1X = (x / nPitch) * nPitch;
 				int Sample1Y = (y / nPitch) * nPitch;
@@ -76,7 +76,7 @@ void PerlinNoise::PerlinNoise2D()
 				float fBlendY = (float)(y - Sample1Y) / (float)nPitch;
 
 				float fSample1 = (1.0f - fBlendX) * seed2D[Sample1Y* outputWitdth +Sample1X] + fBlendX * seed2D[Sample1Y * outputWitdth + Sample2X];
-				float fSample2 = 1;// (1.0f - fBlendX)* seed2D[Sample2Y * outputWitdth + Sample2X] + fBlendX * seed2D[Sample2Y * outputWitdth + Sample2X];
+				float fSample2 = (1.0f - fBlendX)* seed2D[Sample2Y * outputWitdth + Sample2X] + fBlendX * seed2D[Sample2Y * outputWitdth + Sample2X];
 
 				fNoise += (fBlendY * (fSample2 - fSample1) + fSample1) * fScale;
 				fScaleAcc += fScale;
