@@ -1,5 +1,9 @@
 #pragma once
 #include "Grid.h"
+#include <cmath>
+#include <random>
+#include <algorithm>
+#include <numeric>
 
 class PerlinNoise
 {
@@ -20,25 +24,31 @@ public:
 	std::vector <float> seed;
 	std::vector<float>noise;
 
-	//For 2D generation
-	int outputWitdth = ScreenWidth;
-	int outputHeight = ScreenHeight;
-	std::vector <float> seed2D;
-	float* noise2D = new float[outputHeight * outputWitdth];
-
-	
-	
 
 	void PerlinNoise1D();
-
-	void PerlinNoise2D();
-
 	void DrawPerlinNoise1D();
 
-	void DrawPerlinNoise2D();
+
+};
+
+//https://github.com/sol-prog/Perlin_Noise - sol-prog Paul Silisteanu
+class PerlinNoise2D
+{
+	std::vector<int> p;
+private:
+	double fade(double t);
+	double lerp(double t, double a, double b);
+	double grad(int hash, double x, double y, double z);
 
 	
+public:
+	// Initialize with the reference values for the permutation vector
+	PerlinNoise2D();
+	// Generate a new permutation vector based on the value of seed
+	PerlinNoise2D(unsigned int seed);
+	// Get a noise value, for 2D images z can have any value
+	double noise(double x, double y, double z);
+	void generateNoise(sf::Image img, PerlinNoise2D pn, int width, int height);
+
 	
-
-
 };

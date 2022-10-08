@@ -1,19 +1,14 @@
-﻿  Grid.cpp
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(13,41): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(16,42): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(18,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(18,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(32,41): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(34,43): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(36,29): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(36,42): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(43,41): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(45,42): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(47,16): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Grid.cpp(47,30): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  Perlin Noise Terrain gen.cpp
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(7,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(51,39): warning C4305: '+=': truncation from 'double' to 'float'
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(57,40): warning C4305: '+=': truncation from 'double' to 'float'
-  Generating Code...
-  Perlin Noise Terrain gen.vcxproj -> D:\S210641\Projects\Perlin Noise Terrain gen\Debug\Perlin Noise Terrain gen.exe
+﻿  Perlin Noise Terrain gen.cpp
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(6,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(43,21): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(47,30): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(48,31): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(49,31): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(55,34): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(61,49): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(62,49): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(63,40): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(68,38): warning C4244: '=': conversion from 'double' to 'sf::Uint8', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(123,39): warning C4305: '+=': truncation from 'double' to 'float'
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(129,40): warning C4305: '+=': truncation from 'double' to 'float'
+  Perlin Noise Terrain gen.vcxproj -> D:\Perlin-Noise-Terrain-Generation\Debug\Perlin Noise Terrain gen.exe

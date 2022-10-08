@@ -21,6 +21,5 @@ public:
         return instance;
     }
 
-    /*int ScreenWidth=1000;
-    int ScreenHeight=1000;*/
+
 };
