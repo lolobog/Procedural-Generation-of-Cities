@@ -8,16 +8,16 @@ int main()
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
     GridManager gManager(&window);
     PerlinNoise pNoise(&gManager);
-    PerlinNoise2D pn(195);
+    PerlinNoise2D pn;
     int imgWidth = 1000;
     int imgHeight = 1000;
     sf::Image img;
     img.create(imgWidth, imgHeight);
-
+    std::vector<int>colours;
 
 
     int kk = 0;
-    int octaves = 2;
+    int octaves = 8;
     for (int i = 0; i < imgWidth; i ++)
     {
         for (int j = 0; j < imgHeight; j ++)
@@ -29,46 +29,53 @@ int main()
             // Typical Perlin noise
             double n = 0;
             double a = 1.0f;
-            double f = 0.005f;
+            double f = 0.9f;
 
             for (int o = 0; o < octaves; o++)
             {
                 double v = a * pn.noise(x * f, y * f, 0.8);
                 n += v;
-                a *= 0.5;
-                f *= 2.0;
+                a *= 0.7;
+                f *= 2;
             }
-            n = pn.noise(10 * x, 10 * y, 0.8);
+          //  n = pn.noise(10 * x, 10 * y, 0.8);
+           
 
-            int bga = floor(255 * n);
+            int bga;
+            
+                bga = floor(255 * n);
+                colours.push_back(bga);
+
             sf::Color color;
-            if (bga >= 140)
+            if (bga >= 450)
             {
-                color.r = 255-floor(255 * n);
-                color.g = 255 - floor(255 * n) ;
-                color.b = 255 - floor(255 * n) ;
+                color.r = bga;
+                color.g = bga;
+                color.b = bga;
             }
             else
-                if (bga >= 70)
+                if (bga >= 370)
                 {
                     
-                    color.g = 300-floor(255 * n);
+                    color.g = 700- bga;
                    
                 }
                 else
-                    if (bga >= 50)
+                    if (bga >= 320)
                     {
-                        color.r = floor(255 * n)+100;
-                        color.g = floor(255 * n)+100;
-                        color.b = floor(255 * n);
+                        color.r = bga +100;
+                        color.g = bga +100;
+                        color.b = bga;
                     }
                     else
                     {
                         
-                        color.b = 255-floor(255 * n);
+                        color.b = 255- bga;
                     }
 
-
+          /*  color.r = bga;
+            color.g = bga;
+            color.b = bga;*/
 
 
             
