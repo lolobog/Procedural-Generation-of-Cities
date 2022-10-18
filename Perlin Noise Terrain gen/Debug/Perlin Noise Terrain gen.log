@@ -1,6 +1,8 @@
 ﻿  Perlin Noise Terrain gen.cpp
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(6,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(46,28): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(130,39): warning C4305: '+=': truncation from 'double' to 'float'
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(136,40): warning C4305: '+=': truncation from 'double' to 'float'
-  Perlin Noise Terrain gen.vcxproj -> D:\Perlin-Noise-Terrain-Generation\Debug\Perlin Noise Terrain gen.exe
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(7,19): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(12,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(48,29): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(53,28): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(137,39): warning C4305: '+=': truncation from 'double' to 'float'
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(143,40): warning C4305: '+=': truncation from 'double' to 'float'
+  Perlin Noise Terrain gen.vcxproj -> D:\S210641\Projects\Perlin Noise Terrain gen\Debug\Perlin Noise Terrain gen.exe

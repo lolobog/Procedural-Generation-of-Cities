@@ -1,5 +1,11 @@
 #include "PerlinNoise.h"
 
+#include <iostream>
+
+int map(float value, float start1, float stop1, float start2, float stop2)
+{
+    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+}
 
 int main()
 {
@@ -8,7 +14,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
     GridManager gManager(&window);
     PerlinNoise pNoise(&gManager);
-    PerlinNoise2D pn;
+    PerlinNoise2D pn(69);
     int imgWidth = 1000;
     int imgHeight = 1000;
     sf::Image img;
@@ -18,11 +24,17 @@ int main()
 
     int kk = 0;
     int octaves = 8;
-    for (int i = 0; i < imgWidth; i ++)
+
+    float low = FLT_MAX;
+    float high = 0.0f;
+
+    std::vector<double> noiseLevels;
+
+    for (int i = 0; i < imgWidth; i++)
     {
-        for (int j = 0; j < imgHeight; j ++)
+        for (int j = 0; j < imgHeight; j++)
         {
-            
+
             double x = (double)j / ((double)imgWidth);
             double y = (double)i / ((double)imgHeight);
 
@@ -38,39 +50,65 @@ int main()
                 a *= 0.7;
                 f *= 2;
             }
-          //  n = pn.noise(10 * x, 10 * y, 0.8);
-           
+            noiseLevels.push_back(n);
+        }
+    }
+
+    std::vector<double> noiseCopy = noiseLevels;
+
+    for (int i = 0; i < imgHeight; ++i)
+    {
+        for (int j = 0; j < imgWidth; ++j)
+        {
+            // width * row + col
+            
+            double value = noiseCopy[1000 * j + i];
+        }
+    }
+    
+
+    for(int i = 0; i < noiseLevels.size(); ++i)
+    {
+        double n = noiseLevels[i];
+
+            int index = map(n, 1, 2, 0, 255);
+
+            if (n < low)
+                low = n;
+
+            if (n > high)
+                high = n;
 
             int bga;
             
-                bga = floor(255 * n);
+            bga = index;// floor(255 * n);
                 colours.push_back(bga);
 
             sf::Color color;
-            if (bga >= 450)
+            if (bga >= 200)
             {
                 color.r = bga;
                 color.g = bga;
                 color.b = bga;
             }
             else
-                if (bga >= 370)
+                if (bga >= 85)
                 {
                     
-                    color.g = 700- bga;
+                    color.g = bga;
                    
                 }
                 else
-                    if (bga >= 320)
+                    if (bga >= 75)
                     {
-                        color.r = bga +100;
-                        color.g = bga +100;
+                        color.r = bga + 120;
+                        color.g = bga + 120;
                         color.b = bga;
                     }
                     else
                     {
                         
-                        color.b = 255- bga;
+                        color.b = bga + 155;
                     }
 
           /*  color.r = bga;
@@ -78,17 +116,16 @@ int main()
             color.b = bga;*/
 
 
-            
-            img.setPixel(i, j, color);
-            kk++;
+            int y = i % imgWidth;
+            int x = i / imgHeight;
 
-        }
-        
+            img.setPixel(x, y, color);
+            kk++;        
     }
     sf::Texture noise;
     noise.loadFromImage(img);
 
-   
+    std::cout << "lowest noise: " << low << "\nhighest noise: " << high << '\n';
    
     sf::Sprite sprite;
     sprite.setTexture(noise);
