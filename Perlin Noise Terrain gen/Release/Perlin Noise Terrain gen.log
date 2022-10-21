@@ -1,14 +1,14 @@
 ﻿  Perlin Noise Terrain gen.cpp
 D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(7,19): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
 D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(12,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(70,22): warning C4018: '<': signed/unsigned mismatch
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(74,29): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(77,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(80,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(167,39): warning C4305: '+=': truncation from 'double' to 'float'
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(173,40): warning C4305: '+=': truncation from 'double' to 'float'
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(91,22): warning C4018: '<': signed/unsigned mismatch
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(95,29): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(98,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(101,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(186,39): warning C4305: '+=': truncation from 'double' to 'float'
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(192,40): warning C4305: '+=': truncation from 'double' to 'float'
   Generating code
-  1 of 368 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  1 of 382 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

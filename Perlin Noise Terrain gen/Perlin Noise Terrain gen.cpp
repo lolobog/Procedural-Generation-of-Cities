@@ -14,7 +14,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
     GridManager gManager(&window);
     PerlinNoise pNoise(&gManager);
-    PerlinNoise2D pn(69);
+    PerlinNoise2D pn(189);
     int imgWidth = 1000;
     int imgHeight = 1000;
     sf::Image img;
@@ -55,6 +55,7 @@ int main()
     }
 
     std::vector<double> noiseCopy = noiseLevels;
+    int blendLvl = 5;
 
     for (int i = 0; i < imgHeight; ++i)
     {
@@ -62,10 +63,30 @@ int main()
         {
             // width * row + col
             
-            double value = noiseCopy[1000 * j + i];
+            if (i >= blendLvl && j >= blendLvl && i < imgHeight- blendLvl && j < imgWidth- blendLvl)
+            {
+                double value=0;
+                int k = 0;
+                for (int p = i - blendLvl; p < i + blendLvl; p++)
+                {
+                    for (int q = j - blendLvl; q < j + blendLvl; q++)
+                    {
+                        if (p!= q)
+                        {
+                            value += noiseCopy[1000 * q + p];
+                            k++;
+                        }
+                    }
+                }
+
+
+              //   std::cout << "Averaged value: " << value << "\n";
+                noiseCopy[1000 * j + i]=value/k;
+            }
+
         }
     }
-    
+    noiseLevels = noiseCopy;
 
     for(int i = 0; i < noiseLevels.size(); ++i)
     {
@@ -85,7 +106,7 @@ int main()
                 colours.push_back(bga);
 
             sf::Color color;
-            if (bga >= 200)
+            if (bga >= 150)
             {
                 color.r = bga;
                 color.g = bga;
@@ -111,9 +132,7 @@ int main()
                         color.b = bga + 155;
                     }
 
-          /*  color.r = bga;
-            color.g = bga;
-            color.b = bga;*/
+       
 
 
             int y = i % imgWidth;
