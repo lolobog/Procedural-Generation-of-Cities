@@ -55,7 +55,7 @@ int main()
     }
 
     std::vector<double> noiseCopy = noiseLevels;
-    int blendLvl = 5;
+    int blendLvl = 8;
 
     for (int i = 0; i < imgHeight; ++i)
     {
@@ -87,6 +87,49 @@ int main()
         }
     }
     noiseLevels = noiseCopy;
+
+    int chunkWidth = 100, chunkHeight=100;
+    std::vector<double>chunkAvHeight;
+
+    for (int x = 0; x < imgWidth; x += 100)
+    {
+        for (int y = 0; y < imgHeight; y += 100)
+        {
+            int k = 0;
+            double value=0;
+            for (int i = x; i < x+chunkWidth; i++)
+            {
+                for (int j = y; j < y+chunkHeight; j++)
+                {
+                    value+=noiseLevels[1000 * j + i];
+                    k++;
+                }
+            }
+            chunkAvHeight.push_back(value / k);
+        }
+    }
+    
+    int bestValueID;
+    double bestValue = DBL_MAX;
+    for (int chunkID = 0;chunkID<chunkAvHeight.size();chunkID++)
+    {
+        if (bestValue > chunkAvHeight[chunkID])
+        {
+            bestValue = chunkAvHeight[chunkID];
+            bestValueID = chunkID;
+        }
+    }
+
+    std::cout <<"Size of the array of chunks: "<< chunkAvHeight.size() << '\n';
+    std::cout << "Best chunk for city building: " << bestValue << '\n';
+    std::cout << "ID of the best chunks: " << bestValueID << '\n';
+    std::cout << "Chuck start point X: " << (bestValueID % (imgWidth/chunkWidth)-1) * 100 << " Y: " << (bestValueID /(imgHeight/chunkHeight)) * 100 << '\n';
+    
+    sf::RectangleShape chunkOutline(sf::Vector2f(100,100));
+    chunkOutline.setOutlineColor(sf::Color::Black);
+    chunkOutline.setOutlineThickness(10);
+    chunkOutline.setFillColor(sf::Color::Transparent);
+    chunkOutline.setPosition((bestValueID % (imgWidth / chunkWidth) - 1) * 100, (bestValueID / (imgHeight / chunkHeight)) * 100);
 
     for(int i = 0; i < noiseLevels.size(); ++i)
     {
@@ -120,7 +163,7 @@ int main()
                    
                 }
                 else
-                    if (bga >= 75)
+                    if (bga >= 80)
                     {
                         color.r = bga + 120;
                         color.g = bga + 120;
@@ -207,7 +250,7 @@ int main()
      
       //  pNoise.DrawPerlinNoise1D();
       //  gManager.DrawGrid();
-
+        window.draw(chunkOutline);
 
 
 
