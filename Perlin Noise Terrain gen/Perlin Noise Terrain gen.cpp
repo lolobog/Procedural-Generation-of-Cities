@@ -62,16 +62,16 @@ int main()
         for (int j = 0; j < imgWidth; ++j)
         {
             // width * row + col
-            
-            if (i >= blendLvl && j >= blendLvl && i < imgHeight- blendLvl && j < imgWidth- blendLvl)
+            double value = 0;
+            int k = 0;
+            if (i >= blendLvl && j >= blendLvl && i < imgHeight - blendLvl && j < imgWidth - blendLvl)
             {
-                double value=0;
-                int k = 0;
+
                 for (int p = i - blendLvl; p < i + blendLvl; p++)
                 {
                     for (int q = j - blendLvl; q < j + blendLvl; q++)
                     {
-                        if (p!= q)
+                        if (p != q)
                         {
                             value += noiseCopy[1000 * q + p];
                             k++;
@@ -79,10 +79,106 @@ int main()
                     }
                 }
 
+              
 
-              //   std::cout << "Averaged value: " << value << "\n";
-                noiseCopy[1000 * j + i]=value/k;
+
+                noiseCopy[1000 * j + i] = value / k;
             }
+            
+           
+                if (i <= blendLvl)
+                {
+                    for (int p = blendLvl - i; p < imgWidth && p <= blendLvl + i; p++)
+                    {
+                        if (j <= blendLvl)
+                        {
+                            for (int q = blendLvl - j; q < imgHeight && q <= blendLvl + j; q++)
+                            {
+                                if (p != i && q != j)
+                                {
+                                    value += noiseCopy[1000 * q + p];
+                                    k++;
+                                }
+                            }
+                        }
+                       
+                        if (j > blendLvl)
+                            {
+                            for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
+                               {
+                                if (p != i && q != j)
+                                {
+                                   value += noiseCopy[1000 * q + p];
+                                   k++;
+                                }
+                               }
+                            }
+
+                        if (j >= imgWidth - blendLvl)
+                        {
+                            for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
+                            {
+                                if (p != i && q != j)
+                                {
+                                    value += noiseCopy[1000 * q + p];
+                                    k++;
+                                }
+                            }
+                        }
+                    }
+                    noiseCopy[1000 * j + i] = value / k;
+                }
+                else
+                    if (i >= imgHeight - blendLvl || (i>blendLvl&&j<=blendLvl)|| (j > blendLvl && i <= imgWidth - blendLvl))
+                    {
+                        for (int p = i-blendLvl; p < imgWidth && p <= blendLvl + i; p++)
+                        {
+                            if (j <= blendLvl)
+                            {
+                                for (int q = blendLvl - j; q < imgHeight && q <= blendLvl + j; q++)
+                                {
+                                    if (p != i && q != j)
+                                    {
+                                        value += noiseCopy[1000 * q + p];
+                                        k++;
+                                    }
+                                }
+                            }
+
+                            if (j > blendLvl)
+                            {
+                                for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
+                                {
+                                    if (p != i && q != j)
+                                    {
+                                        value += noiseCopy[1000 * q + p];
+                                        k++;
+                                    }
+                                }
+                            }
+
+                            if (j >= imgWidth - blendLvl)
+                            {
+                                for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
+                                {
+                                    if (p != i && q != j)
+                                    {
+                                        value += noiseCopy[1000 * q + p];
+                                        k++;
+                                    }
+                                }
+                            }
+
+                        }
+                        noiseCopy[1000 * j + i] = value / k;
+                    }
+
+
+                
+            
+              //   std::cout << "Averaged value: " << value << "\n";
+              //  noiseCopy[1000 * j + i]=value/k;
+            
 
         }
     }
@@ -91,9 +187,9 @@ int main()
     int chunkWidth = 100, chunkHeight=100;
     std::vector<double>chunkAvHeight;
 
-    for (int x = 0; x < imgWidth; x += 100)
+    for (int x = 0; x < imgWidth; x += chunkWidth)
     {
-        for (int y = 0; y < imgHeight; y += 100)
+        for (int y = 0; y < imgHeight; y += chunkHeight)
         {
             int k = 0;
             double value=0;
@@ -123,13 +219,13 @@ int main()
     std::cout <<"Size of the array of chunks: "<< chunkAvHeight.size() << '\n';
     std::cout << "Best chunk for city building: " << bestValue << '\n';
     std::cout << "ID of the best chunks: " << bestValueID << '\n';
-    std::cout << "Chuck start point X: " << (bestValueID % (imgWidth/chunkWidth)-1) * 100 << " Y: " << (bestValueID /(imgHeight/chunkHeight)) * 100 << '\n';
+    std::cout << "Chuck start point X: " << (bestValueID % (imgWidth/chunkWidth)) * chunkWidth << " Y: " << (bestValueID /(imgHeight/chunkHeight)) * chunkHeight << '\n';
     
-    sf::RectangleShape chunkOutline(sf::Vector2f(100,100));
+    sf::RectangleShape chunkOutline(sf::Vector2f(chunkWidth,chunkHeight));
     chunkOutline.setOutlineColor(sf::Color::Black);
     chunkOutline.setOutlineThickness(10);
     chunkOutline.setFillColor(sf::Color::Transparent);
-    chunkOutline.setPosition((bestValueID % (imgWidth / chunkWidth) - 1) * 100, (bestValueID / (imgHeight / chunkHeight)) * 100);
+    chunkOutline.setPosition((bestValueID % (imgWidth / chunkWidth)) * chunkWidth, (bestValueID / (imgHeight / chunkHeight)) * chunkHeight);
 
     for(int i = 0; i < noiseLevels.size(); ++i)
     {

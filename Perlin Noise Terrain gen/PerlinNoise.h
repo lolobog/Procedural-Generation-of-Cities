@@ -48,7 +48,7 @@ public:
 	PerlinNoise2D(unsigned int seed);
 	// Get a noise value, for 2D images z can have any value
 	double noise(double x, double y, double z);
-	void generateNoise(sf::Image img, PerlinNoise2D pn, int width, int height);
+	
 
 	
 };

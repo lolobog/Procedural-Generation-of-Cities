@@ -113,63 +113,7 @@ double PerlinNoise2D::grad(int hash, double x, double y, double z) {
 	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }
 
-void PerlinNoise2D::generateNoise(sf::Image img,PerlinNoise2D pn,int width, int height)
-{
-	int kk = 0;
-	int octaves = 0;
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
 
-			double x = (double)j / ((double)width);
-			double y = (double)i / ((double)height);
-
-			// Typical Perlin noise
-			double n = pn.noise(10 * x, 10 * y, 0.8);
-			double a = 1.0f;
-			double f = 0.005f;
-
-
-			int bga = floor(255 * n);
-			sf::Color color;
-			if (bga >= 140)
-			{
-				color.r = 255 - floor(255 * n);
-				color.g = 255 - floor(255 * n);
-				color.b = 255 - floor(255 * n);
-			}
-			else
-				if (bga >= 70)
-				{
-
-					color.g = 300 - floor(255 * n);
-
-				}
-				else
-					if (bga >= 50)
-					{
-						color.r = floor(255 * n) + 100;
-						color.g = floor(255 * n) + 100;
-						color.b = floor(255 * n);
-					}
-					else
-					{
-
-						color.b = 255 - floor(255 * n);
-					}
-
-
-
-
-
-			img.setPixel(i, j, color);
-			kk++;
-
-		}
-
-	}
-}
 
 double PerlinNoise2D::noise(double x, double y, double z) 
 {
