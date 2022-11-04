@@ -170,7 +170,7 @@ int main()
 {
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
-    PerlinNoise2D pn(189);
+    PerlinNoise2D pn(29);
     int imgWidth = 1000;
     int imgHeight = 1000;
     sf::Image img;
@@ -178,9 +178,6 @@ int main()
 
     int octaves = 8;
     int blendLvl = 8;
-
-    float low = FLT_MAX;
-    float high = 0.0f;
 
     std::vector<double> noiseLevels= generateNoise(pn, octaves, noiseLevels, imgWidth, imgHeight); //Generate the perlin noise
     noiseLevels = blendNoise(noiseLevels,blendLvl,imgHeight,imgWidth); //Blend the perlin noise to look more uniform
@@ -213,10 +210,16 @@ int main()
         int scalingFactor = 1;
         if (chunkAvHeight[chunkID] < 80)
             scalingFactor = 100;
-        if (chunkAvHeight[chunkID] > 150)
-            scalingFactor = 10;
         if (chunkAvHeight[chunkID] >= 80 && chunkAvHeight[chunkID] <= 85)
             scalingFactor = 5;
+        if (chunkAvHeight[chunkID] >= 85 && chunkAvHeight[chunkID] <= 110)
+        {
+            scalingFactor = 2;
+        }
+        if (chunkAvHeight[chunkID] > 150)
+            scalingFactor = 10;
+        
+        
 
         if (bestValue > chunkAvHeight[chunkID]*scalingFactor)
         {
