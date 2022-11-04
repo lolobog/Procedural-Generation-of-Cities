@@ -44,116 +44,56 @@ int map(float value, float start1, float stop1, float start2, float stop2)
              // width * row + col
              double value = 0;
              int k = 0;
-             if (i >= blendLvl && j >= blendLvl && i < imgHeight - blendLvl && j < imgWidth - blendLvl)
+             int p, q;
+             if (i >= blendLvl&& i < imgHeight - blendLvl)
              {
-
-                 for (int p = i - blendLvl; p < i + blendLvl; p++)
-                 {
-                     for (int q = j - blendLvl; q < j + blendLvl; q++)
-                     {
-                         if (p != q)
-                         {
-                             value += noiseCopy[1000 * q + p];
-                             k++;
-                         }
-                     }
-                 }
-
-
-
-
-                 noiseCopy[1000 * j + i] = value / k;
+                p = i - blendLvl;
              }
-
 
              if (i <= blendLvl)
              {
-                 for (int p = blendLvl - i; p < imgWidth && p <= blendLvl + i; p++)
-                 {
-                     if (j <= blendLvl)
-                     {
-                         for (int q = blendLvl - j; q < imgHeight && q <= blendLvl + j; q++)
-                         {
-                             if (p != i && q != j)
-                             {
-                                 value += noiseCopy[1000 * q + p];
-                                 k++;
-                             }
-                         }
-                     }
-
-                     if (j > blendLvl)
-                     {
-                         for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
-                         {
-                             if (p != i && q != j)
-                             {
-                                 value += noiseCopy[1000 * q + p];
-                                 k++;
-                             }
-                         }
-                     }
-
-                     if (j >= imgWidth - blendLvl)
-                     {
-                         for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
-                         {
-                             if (p != i && q != j)
-                             {
-                                 value += noiseCopy[1000 * q + p];
-                                 k++;
-                             }
-                         }
-                     }
-                 }
-                 noiseCopy[1000 * j + i] = value / k;
+                 p = blendLvl - i;
              }
-             else
-                 if (i >= imgHeight - blendLvl || (i > blendLvl && j <= blendLvl) || (j > blendLvl && i <= imgWidth - blendLvl))
+           
+             if (i >= imgHeight - blendLvl || (i > blendLvl && j <= blendLvl) || (j > blendLvl && i <= imgWidth - blendLvl))
+             {
+                 p = i - blendLvl;     
+             }
+
+             for (p; p < imgWidth && p <= blendLvl + i; p++)
+             {
+              
+                 if (j >= blendLvl && j < imgWidth - blendLvl)
                  {
-                     for (int p = i - blendLvl; p < imgWidth && p <= blendLvl + i; p++)
-                     {
-                         if (j <= blendLvl)
-                         {
-                             for (int q = blendLvl - j; q < imgHeight && q <= blendLvl + j; q++)
-                             {
-                                 if (p != i && q != j)
-                                 {
-                                     value += noiseCopy[1000 * q + p];
-                                     k++;
-                                 }
-                             }
-                         }
-
-                         if (j > blendLvl)
-                         {
-                             for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
-                             {
-                                 if (p != i && q != j)
-                                 {
-                                     value += noiseCopy[1000 * q + p];
-                                     k++;
-                                 }
-                             }
-                         }
-
-                         if (j >= imgWidth - blendLvl)
-                         {
-                             for (int q = j - blendLvl; q < imgHeight && q <= blendLvl + j; q++)
-                             {
-                                 if (p != i && q != j)
-                                 {
-                                     value += noiseCopy[1000 * q + p];
-                                     k++;
-                                 }
-                             }
-                         }
-
-                     }
-                     noiseCopy[1000 * j + i] = value / k;
+                     q = j - blendLvl;
+                 }
+                 if (j <= blendLvl)
+                 {
+                   q = blendLvl - j;
                  }
 
+                 if (j > blendLvl)
+                 {
+                   q = j - blendLvl;
+                 }
 
+                 if (j >= imgWidth - blendLvl)
+                 {
+                   q = j - blendLvl;
+                 }
+
+                 for (q; q < imgHeight && q <= blendLvl + j; q++)
+                 {
+                    if (p != i && q != j)
+                    {
+                       value += noiseCopy[1000 * q + p];
+                       k++;
+                    }
+                 }
+
+             }
+
+                 noiseCopy[1000 * j + i] = value / k;
          }
      }
      return noiseCopy;
@@ -261,17 +201,26 @@ int main()
     
 
     int chunkWidth = 200, chunkHeight=200;
-    std::vector<double>chunkAvHeight=calcChunkAvHeight(chunkWidth,chunkHeight,noiseLevels,imgWidth,imgHeight);//Calculate the average height of every chunk
+    std::vector<double>chunkAvHeight=calcChunkAvHeight(chunkWidth,chunkHeight,mappedValues,imgWidth,imgHeight);//Calculate the average height of every chunk
 
  
     
     int bestValueID;
     double bestValue = DBL_MAX;
+    
     for (int chunkID = 0;chunkID<chunkAvHeight.size();chunkID++)
     {
-        if (bestValue > chunkAvHeight[chunkID])
+        int scalingFactor = 1;
+        if (chunkAvHeight[chunkID] < 80)
+            scalingFactor = 100;
+        if (chunkAvHeight[chunkID] > 150)
+            scalingFactor = 10;
+        if (chunkAvHeight[chunkID] >= 80 && chunkAvHeight[chunkID] <= 85)
+            scalingFactor = 5;
+
+        if (bestValue > chunkAvHeight[chunkID]*scalingFactor)
         {
-            bestValue = chunkAvHeight[chunkID];
+            bestValue = chunkAvHeight[chunkID] * scalingFactor;
             bestValueID = chunkID;
         }
     }
