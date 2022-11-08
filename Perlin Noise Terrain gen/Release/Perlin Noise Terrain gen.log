@@ -1,68 +1,8 @@
-﻿  Perlin Noise Terrain gen.cpp
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(7,19): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(128,24): warning C4018: '<': signed/unsigned mismatch
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(135,38): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(136,38): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(137,38): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(143,42): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(149,48): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(150,48): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(151,46): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(156,48): warning C4244: '=': conversion from '_Ty' to 'sf::Uint8', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(171,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(186,23): warning C4018: '<': signed/unsigned mismatch
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(188,49): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(208,33): warning C4018: '<': signed/unsigned mismatch
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(236,61): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(236,50): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(240,126): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(240,70): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  LSystem.cpp
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\LSystem.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\LSystem.cpp(23,21): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  1 of 196 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
+  2 of 270 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

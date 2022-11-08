@@ -144,3 +144,96 @@ double PerlinNoise2D::noise(double x, double y, double z)
 	double res = lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)), lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z))), lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)), lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1))));
 	return (res + 1.0) / 2.0;
 }
+std::vector<double> PerlinNoise2D::generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels, int imgWidth, int imgHeight)
+{
+	for (int i = 0; i < imgWidth; i++)
+	{
+		for (int j = 0; j < imgHeight; j++)
+		{
+
+			double x = (double)j / ((double)imgWidth);
+			double y = (double)i / ((double)imgHeight);
+
+			// Typical Perlin noise
+			double n = 0;
+			double a = 1.0f;
+			double f = 0.9f;
+
+			for (int o = 0; o < octaves; o++)
+			{
+				double v = a * pn.noise(x * f, y * f, 0.8);
+				n += v;
+				a *= 0.7;
+				f *= 2;
+			}
+			noiseLevels.push_back(n);
+		}
+	}
+	return noiseLevels;
+}
+
+std::vector<double> PerlinNoise2D::blendNoise(std::vector<double>noiseCopy, int blendLvl, int imgHeight, int imgWidth)
+{
+	for (int i = 0; i < imgHeight; ++i)
+	{
+		for (int j = 0; j < imgWidth; ++j)
+		{
+			// width * row + col
+			double value = 0;
+			int k = 0;
+			int p, q;
+			if (i >= blendLvl && i < imgHeight - blendLvl)
+			{
+				p = i - blendLvl;
+			}
+
+			if (i <= blendLvl)
+			{
+				p = blendLvl - i;
+			}
+
+			if (i >= imgHeight - blendLvl || (i > blendLvl && j <= blendLvl) || (j > blendLvl && i <= imgWidth - blendLvl))
+			{
+				p = i - blendLvl;
+			}
+
+			for (p; p < imgWidth && p <= blendLvl + i; p++)
+			{
+
+				if (j >= blendLvl && j < imgWidth - blendLvl)
+				{
+					q = j - blendLvl;
+				}
+				if (j <= blendLvl)
+				{
+					q = blendLvl - j;
+				}
+
+				if (j > blendLvl)
+				{
+					q = j - blendLvl;
+				}
+
+				if (j >= imgWidth - blendLvl)
+				{
+					q = j - blendLvl;
+				}
+
+				for (q; q < imgHeight && q <= blendLvl + j; q++)
+				{
+					if (p != i && q != j)
+					{
+						value += noiseCopy[imgWidth * q + p];
+						k++;
+					}
+				}
+
+			}
+
+			noiseCopy[imgWidth * j + i] = value / k;
+		}
+	}
+	return noiseCopy;
+}
+
+

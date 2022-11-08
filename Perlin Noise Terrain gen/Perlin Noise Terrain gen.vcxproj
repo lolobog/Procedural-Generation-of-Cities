@@ -146,13 +146,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="LSystem.cpp" />
     <ClCompile Include="Perlin Noise Terrain gen.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
+    <ClCompile Include="MapManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="LSystem.h" />
     <ClInclude Include="PerlinNoise.h" />
-    <ClInclude Include="SettlementManager.h" />
+    <ClInclude Include="MapManager.h" />
     <ClInclude Include="Variables.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

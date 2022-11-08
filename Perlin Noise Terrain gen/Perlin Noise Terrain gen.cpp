@@ -1,176 +1,28 @@
-#include "PerlinNoise.h"
-
+#include "MapManager.h"
+#include "LSystem.h"
 #include <iostream>
 
-int map(float value, float start1, float stop1, float start2, float stop2)
+int mapVal(float value, float start1, float stop1, float start2, float stop2)
 {
     return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
-
- std::vector<double> generateNoise(PerlinNoise2D pn,int octaves,std::vector<double>noiseLevels,int imgWidth,int imgHeight)
+std::vector<double> mapVector(std::vector<double> noiseLevels,float start1, float stop1, float start2, float stop2)
 {
-    for (int i = 0; i < imgWidth; i++)
+    std::vector<double> mappedValues;
+    for (int i = 0; i < noiseLevels.size(); ++i)
     {
-        for (int j = 0; j < imgHeight; j++)
-        {
-
-            double x = (double)j / ((double)imgWidth);
-            double y = (double)i / ((double)imgHeight);
-
-            // Typical Perlin noise
-            double n = 0;
-            double a = 1.0f;
-            double f = 0.9f;
-
-            for (int o = 0; o < octaves; o++)
-            {
-                double v = a * pn.noise(x * f, y * f, 0.8);
-                n += v;
-                a *= 0.7;
-                f *= 2;
-            }
-            noiseLevels.push_back(n);
-        }
+        mappedValues.push_back(mapVal(noiseLevels[i], start1, stop1, start2, stop2));
     }
-    return noiseLevels;
+    return mappedValues;
 }
-
- std::vector<double> blendNoise(std::vector<double>noiseCopy,int blendLvl,int imgHeight,int imgWidth)
- {
-     for (int i = 0; i < imgHeight; ++i)
-     {
-         for (int j = 0; j < imgWidth; ++j)
-         {
-             // width * row + col
-             double value = 0;
-             int k = 0;
-             int p, q;
-             if (i >= blendLvl&& i < imgHeight - blendLvl)
-             {
-                p = i - blendLvl;
-             }
-
-             if (i <= blendLvl)
-             {
-                 p = blendLvl - i;
-             }
-           
-             if (i >= imgHeight - blendLvl || (i > blendLvl && j <= blendLvl) || (j > blendLvl && i <= imgWidth - blendLvl))
-             {
-                 p = i - blendLvl;     
-             }
-
-             for (p; p < imgWidth && p <= blendLvl + i; p++)
-             {
-              
-                 if (j >= blendLvl && j < imgWidth - blendLvl)
-                 {
-                     q = j - blendLvl;
-                 }
-                 if (j <= blendLvl)
-                 {
-                   q = blendLvl - j;
-                 }
-
-                 if (j > blendLvl)
-                 {
-                   q = j - blendLvl;
-                 }
-
-                 if (j >= imgWidth - blendLvl)
-                 {
-                   q = j - blendLvl;
-                 }
-
-                 for (q; q < imgHeight && q <= blendLvl + j; q++)
-                 {
-                    if (p != i && q != j)
-                    {
-                       value += noiseCopy[1000 * q + p];
-                       k++;
-                    }
-                 }
-
-             }
-
-                 noiseCopy[1000 * j + i] = value / k;
-         }
-     }
-     return noiseCopy;
- }
-
- std::vector<double> calcChunkAvHeight(int chunkWidth,int chunkHeight,std::vector<double>noiseLevels,int imgWidth, int imgHeight)
- {
-     std::vector<double>chunkAvHeight;
-     for (int x = 0; x < imgWidth; x += chunkWidth)
-     {
-         for (int y = 0; y < imgHeight; y += chunkHeight)
-         {
-             int k = 0;
-             double value = 0;
-             for (int i = x; i < x + chunkWidth; i++)
-             {
-                 for (int j = y; j < y + chunkHeight; j++)
-                 {
-                     value += noiseLevels[1000 * j + i];
-                     k++;
-                 }
-             }
-             chunkAvHeight.push_back(value / k);
-         }
-         
-     }
-     return chunkAvHeight;
-     
- }
- void colorImg(sf::Image &img,int imgWidth,int imgHeight,std::vector<double>mappedValues)
- {
-     for (int i = 0; i < mappedValues.size(); ++i)
-     {
-
-         sf::Color color;
-
-         if (mappedValues[i] >= 150)
-         {
-             color.r = mappedValues[i];
-             color.g = mappedValues[i];
-             color.b = mappedValues[i];
-         }
-         else
-             if (mappedValues[i] >= 85)
-             {
-
-                 color.g = mappedValues[i];
-
-             }
-             else
-                 if (mappedValues[i] >= 80)
-                 {
-                     color.r = mappedValues[i] + 120;
-                     color.g = mappedValues[i] + 120;
-                     color.b = mappedValues[i];
-                 }
-                 else
-                 {
-
-                     color.b = mappedValues[i] + 155;
-                 }
-
-
-
-
-         int y = i % imgWidth;
-         int x = i / imgHeight;
-
-         img.setPixel(x, y, color);
-     }
- }
 
 int main()
 {
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
-    PerlinNoise2D pn(29);
+    PerlinNoise2D pn(189);
+    MapManager mapM;
+    LSystem lsystem;
     int imgWidth = 1000;
     int imgHeight = 1000;
     sf::Image img;
@@ -179,15 +31,11 @@ int main()
     int octaves = 8;
     int blendLvl = 8;
 
-    std::vector<double> noiseLevels= generateNoise(pn, octaves, noiseLevels, imgWidth, imgHeight); //Generate the perlin noise
-    noiseLevels = blendNoise(noiseLevels,blendLvl,imgHeight,imgWidth); //Blend the perlin noise to look more uniform
+    std::vector<double> noiseLevels= pn.generateNoise(pn, octaves, noiseLevels, imgWidth, imgHeight); //Generate the perlin noise
+    noiseLevels = pn.blendNoise(noiseLevels,blendLvl,imgHeight,imgWidth); //Blend the perlin noise to look more uniform
 
-    std::vector<double> mappedValues;
-    for (int i = 0; i < noiseLevels.size(); ++i)
-    {
-        mappedValues.push_back(map(noiseLevels[i], 1, 2, 0, 255));
-    }
-    colorImg(img, imgWidth, imgHeight, mappedValues);
+    noiseLevels = mapVector(noiseLevels,1,2,0,255);
+    mapM.colorImg(img, imgWidth, imgHeight, noiseLevels);
 
     sf::Texture noise;
     noise.loadFromImage(img);
@@ -198,8 +46,7 @@ int main()
     
 
     int chunkWidth = 200, chunkHeight=200;
-    std::vector<double>chunkAvHeight=calcChunkAvHeight(chunkWidth,chunkHeight,mappedValues,imgWidth,imgHeight);//Calculate the average height of every chunk
-
+    std::vector<double>chunkAvHeight= mapM.calcChunkAvHeight(chunkWidth,chunkHeight, noiseLevels,imgWidth,imgHeight);//Calculate the average height of every chunk
  
     
     int bestValueID;
@@ -238,6 +85,8 @@ int main()
     chunkOutline.setOutlineThickness(10);
     chunkOutline.setFillColor(sf::Color::Transparent);
     chunkOutline.setPosition((bestValueID % (imgWidth / chunkWidth)) * chunkWidth, (bestValueID / (imgHeight / chunkHeight)) * chunkHeight);
+
+    lsystem.applyRules(7);
 
   
 
