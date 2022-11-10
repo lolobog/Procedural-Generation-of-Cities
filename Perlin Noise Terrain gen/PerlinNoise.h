@@ -48,8 +48,8 @@ public:
 	PerlinNoise2D(unsigned int seed);
 	// Get a noise value, for 2D images z can have any value
 	double noise(double x, double y, double z);
-	std::vector<double> blendNoise(std::vector<double>noiseCopy, int blendLvl, int imgHeight, int imgWidth);
-	std::vector<double> generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels, int imgWidth, int imgHeight);
+	std::vector<double> blendNoise(std::vector<double>noiseCopy, int blendLvl);
+	std::vector<double> generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels);
 	
 
 	

@@ -144,7 +144,7 @@ double PerlinNoise2D::noise(double x, double y, double z)
 	double res = lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)), lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z))), lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)), lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1))));
 	return (res + 1.0) / 2.0;
 }
-std::vector<double> PerlinNoise2D::generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels, int imgWidth, int imgHeight)
+std::vector<double> PerlinNoise2D::generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels)
 {
 	for (int i = 0; i < imgWidth; i++)
 	{
@@ -172,7 +172,7 @@ std::vector<double> PerlinNoise2D::generateNoise(PerlinNoise2D pn, int octaves, 
 	return noiseLevels;
 }
 
-std::vector<double> PerlinNoise2D::blendNoise(std::vector<double>noiseCopy, int blendLvl, int imgHeight, int imgWidth)
+std::vector<double> PerlinNoise2D::blendNoise(std::vector<double>noiseCopy, int blendLvl)
 {
 	for (int i = 0; i < imgHeight; ++i)
 	{

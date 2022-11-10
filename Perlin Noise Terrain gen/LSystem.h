@@ -11,11 +11,13 @@ public:
 	~LSystem();
 
 
-	void applyRules(int iterations);
+	virtual void applyRules(int iterations);
 	
+protected:
+	std::vector<char> variables;
+	std::vector<char> output;
 
 private:
-	std::vector<char> variables = { 'A','B' };
-	std::vector<char> output = { 'A' };
+	
 	
 };

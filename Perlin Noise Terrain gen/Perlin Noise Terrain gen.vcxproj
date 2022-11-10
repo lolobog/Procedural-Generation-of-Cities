@@ -150,12 +150,14 @@
     <ClCompile Include="Perlin Noise Terrain gen.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="MapManager.cpp" />
+    <ClCompile Include="RoadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grid.h" />
     <ClInclude Include="LSystem.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="MapManager.h" />
+    <ClInclude Include="RoadManager.h" />
     <ClInclude Include="Variables.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

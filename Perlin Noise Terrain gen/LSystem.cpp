@@ -2,6 +2,8 @@
 
 LSystem::LSystem()
 {
+	variables = { 'A','B' };
+	output = { 'A' };
 }
 
 LSystem::~LSystem()

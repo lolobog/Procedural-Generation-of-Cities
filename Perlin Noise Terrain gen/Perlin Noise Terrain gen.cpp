@@ -20,22 +20,20 @@ int main()
 {
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
-    PerlinNoise2D pn(189);
+    PerlinNoise2D pn(70);
     MapManager mapM;
     LSystem lsystem;
-    int imgWidth = 1000;
-    int imgHeight = 1000;
     sf::Image img;
     img.create(imgWidth, imgHeight);
 
     int octaves = 8;
     int blendLvl = 8;
 
-    std::vector<double> noiseLevels= pn.generateNoise(pn, octaves, noiseLevels, imgWidth, imgHeight); //Generate the perlin noise
-    noiseLevels = pn.blendNoise(noiseLevels,blendLvl,imgHeight,imgWidth); //Blend the perlin noise to look more uniform
+    std::vector<double> noiseLevels= pn.generateNoise(pn, octaves, noiseLevels); //Generate the perlin noise
+    noiseLevels = pn.blendNoise(noiseLevels,blendLvl); //Blend the perlin noise to look more uniform
 
     noiseLevels = mapVector(noiseLevels,1,2,0,255);
-    mapM.colorImg(img, imgWidth, imgHeight, noiseLevels);
+    mapM.colorImg(img, noiseLevels);
 
     sf::Texture noise;
     noise.loadFromImage(img);
@@ -45,49 +43,27 @@ int main()
 
     
 
-    int chunkWidth = 200, chunkHeight=200;
-    std::vector<double>chunkAvHeight= mapM.calcChunkAvHeight(chunkWidth,chunkHeight, noiseLevels,imgWidth,imgHeight);//Calculate the average height of every chunk
+    
+    std::vector<double>chunkAvHeight= mapM.calcChunkAvHeight( noiseLevels);//Calculate the average height of every chunk
  
     
-    int bestValueID;
-    double bestValue = DBL_MAX;
-    
-    for (int chunkID = 0;chunkID<chunkAvHeight.size();chunkID++)
-    {
-        int scalingFactor = 1;
-        if (chunkAvHeight[chunkID] < 80)
-            scalingFactor = 100;
-        if (chunkAvHeight[chunkID] >= 80 && chunkAvHeight[chunkID] <= 85)
-            scalingFactor = 5;
-        if (chunkAvHeight[chunkID] >= 85 && chunkAvHeight[chunkID] <= 110)
-        {
-            scalingFactor = 2;
-        }
-        if (chunkAvHeight[chunkID] > 150)
-            scalingFactor = 10;
-        
-        
-
-        if (bestValue > chunkAvHeight[chunkID]*scalingFactor)
-        {
-            bestValue = chunkAvHeight[chunkID] * scalingFactor;
-            bestValueID = chunkID;
-        }
-    }
+    int bestValueID=mapM.getBestChunkID(chunkAvHeight);
+  
 
     std::cout <<"Size of the array of chunks: "<< chunkAvHeight.size() << '\n';
-    std::cout << "Best chunk for city building: " << bestValue << '\n';
     std::cout << "ID of the best chunks: " << bestValueID << '\n';
-    std::cout << "Chuck start point X: " << (bestValueID % (imgWidth/chunkWidth)) * chunkWidth << " Y: " << (bestValueID /(imgHeight/chunkHeight)) * chunkHeight << '\n';
+    std::cout << "Chuck start point X: " << mapM.findChunkX(bestValueID) << " Y: " << mapM.findChunkY(bestValueID) << '\n';
     
-    sf::RectangleShape chunkOutline(sf::Vector2f(chunkWidth,chunkHeight));
+    sf::RectangleShape chunkOutline(sf::Vector2f(chunkWidth, chunkHeight));
     chunkOutline.setOutlineColor(sf::Color::Black);
     chunkOutline.setOutlineThickness(10);
     chunkOutline.setFillColor(sf::Color::Transparent);
-    chunkOutline.setPosition((bestValueID % (imgWidth / chunkWidth)) * chunkWidth, (bestValueID / (imgHeight / chunkHeight)) * chunkHeight);
+    chunkOutline.setPosition(mapM.findChunkStartP(bestValueID));
 
     lsystem.applyRules(7);
 
+
+   
   
 
    
