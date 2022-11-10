@@ -1,6 +1,5 @@
-#include "MapManager.h"
-#include "LSystem.h"
-#include <iostream>
+#include "RoadManager.h"
+
 
 int mapVal(float value, float start1, float stop1, float start2, float stop2)
 {
@@ -20,9 +19,9 @@ int main()
 {
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
-    PerlinNoise2D pn(70);
+    PerlinNoise2D pn(86);
     MapManager mapM;
-    LSystem lsystem;
+   
     sf::Image img;
     img.create(imgWidth, imgHeight);
 
@@ -59,10 +58,12 @@ int main()
     chunkOutline.setOutlineThickness(10);
     chunkOutline.setFillColor(sf::Color::Transparent);
     chunkOutline.setPosition(mapM.findChunkStartP(bestValueID));
+   
+    RoadManager roads(bestValueID,&window);
+    roads.applyRules(6);
+  
 
-    lsystem.applyRules(7);
-
-
+    
    
   
 
@@ -121,7 +122,8 @@ int main()
         window.draw(sprite);
         window.draw(chunkOutline);
 
-
+        roads.drawRoads();
+       
 
         window.display();
     }

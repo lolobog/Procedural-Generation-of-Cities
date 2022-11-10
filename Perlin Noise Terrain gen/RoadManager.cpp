@@ -1,10 +1,12 @@
 #include "RoadManager.h"
 
-RoadManager::RoadManager(int chunkID)
+RoadManager::RoadManager(int chunkID,sf::RenderWindow* window)
 {
 	variables = { 'C' ,'F','R','L','B'};
 	output = { 'C' };
-	RoadNetwork->setRoot(findChunkCenter(chunkID));
+	RoadNetwork->setRoot(findChunkCenter(chunkID),'C');
+	currentChunk = chunkID;
+	refWindow = window;
 }
 
 RoadManager::~RoadManager()
@@ -13,71 +15,105 @@ RoadManager::~RoadManager()
 
 void RoadManager::applyRules(int iterations)
 {
-	for (auto c : output)
-	{
-		cout << c;
-	}
-	cout << '\n';
+	
 
 	while (iterations > 0)
 	{
-		vector<char> tempOutput;
+		
 
-		for (int i = 0; i < output.size(); i++)
+		for (auto element : RoadNetwork->AllNodes)
 		{
-			switch (output[i])
+			if (element->rulesApplied == false)
 			{
-			
-			case 'C':
-			{
-				tempOutput.push_back('F');
-				tempOutput.push_back('R');
-				tempOutput.push_back('L');
-				tempOutput.push_back('B');
+				switch (element->nodeType)
+				{
+					
+				case 'C':
+				{
+					if(isInChunkBounds(sf::Vector2f(element->endPos.x + 10, element->endPos.y),currentChunk))//&&RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x + roadLength, element->endPos.y))==false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x + roadLength, element->endPos.y), 'F');
 
-				break;
-			}
-			case 'F':
-			{
-				tempOutput.push_back('A');
-				break;
-			}
-			case 'R':
-			{
-				tempOutput.push_back('A');
-				break;
-			}
-			case 'L':
-			{
-				tempOutput.push_back('A');
-				break;
-			}
-			case 'B':
-			{
-				tempOutput.push_back('A');
-				break;
-			}
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
+
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
+
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x - 10, element->endPos.y), currentChunk) )//&& RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x - roadLength, element->endPos.y)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x - roadLength, element->endPos.y), 'B');
+
+					
+
+					break;
+				}
+				case 'F':
+				{
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x + 10, element->endPos.y), currentChunk))//&&RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x + roadLength, element->endPos.y))==false)
+						RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x + roadLength, element->endPos.y), 'F');
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
+
+					break;
+				}
+				case 'R':
+				{
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x + 10, element->endPos.y), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x + roadLength, element->endPos.y)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.y + roadLength, element->endPos.y), 'F');
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
+
+					break;
+				}
+				case 'L':
+				{
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x - 10, element->endPos.y), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x - roadLength, element->endPos.y)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.y - roadLength, element->endPos.y), 'B');
+
+					break;
+				}
+				case 'B':
+				{
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x - 10, element->endPos.y), currentChunk))//&& RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x - roadLength, element->endPos.y)) == false)
+						RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x - roadLength, element->endPos.y), 'B');
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk) )//&& RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
+					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk) )//&& RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
+					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
+
+					break;
+				}
 
 
 
-			default:
-				break;
+				default:
+					break;
+				}
 			}
+			element->rulesApplied = true;
 		}
-		output = tempOutput;
-		for (auto c : output)
-		{
-			cout << c;
-		}
-		cout << '\n';
+		
 		iterations--;
 	}
 }
 
-NodeTree::NodeTree()
+void RoadManager::drawRoads()
 {
+	for (auto element : RoadNetwork->AllNodes)
+	{
+		if (element->parent != NULL)
+		{
+			sf::Vertex line[] =
+			{
+				sf::Vertex(element->parent->endPos),
+				sf::Vertex(element->endPos)
+			};
+			refWindow->draw(line, 2, sf::Lines);
+		}
+	}
 }
 
-NodeTree::~NodeTree()
-{
-}
+
