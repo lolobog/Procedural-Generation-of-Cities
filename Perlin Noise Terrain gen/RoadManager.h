@@ -23,12 +23,13 @@ public:
 
 	Node root;
 	std::vector<Node*>AllNodes;
-
+	std::vector<Node*>CurrentNodes;
 	void setRoot(sf::Vector2f Pos,char nodeInfo)
 	{
 		root.endPos = Pos;
 		root.nodeType = nodeInfo;
 		AllNodes.push_back(&root);
+		CurrentNodes.push_back(&root);
 	}
 
 	void newLink(Node* targetNode, sf::Vector2f Pos,char nodeInfo)
@@ -40,6 +41,8 @@ public:
 
 		targetNode->nodeLinks.push_back(newNode);
 		AllNodes.push_back(newNode);
+		CurrentNodes.push_back(newNode);
+
 	}
 
 	bool isIntersecting(sf::Vector2f point)
@@ -77,6 +80,8 @@ private:
 
 
 
+
+
 class RoadManager :public LSystem,public MapManager
 {
 public:
@@ -93,9 +98,9 @@ public:
 	
 	void applyRules(int iterations);
 	void drawRoads();
-
+	int random(int low, int high);
 private:
-	int roadLength = 20;
+	int roadLength = 25;
 	int currentChunk;
 	sf::RenderWindow* refWindow;
 };

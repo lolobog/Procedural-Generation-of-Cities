@@ -6,7 +6,6 @@ const int imgWidth = 1000, const imgHeight = 1000;
 const int chunkWidth = 200, const chunkHeight = 200;
 
 
-
 class Singleton
 {
 private:

@@ -17,6 +17,7 @@ std::vector<double> mapVector(std::vector<double> noiseLevels,float start1, floa
 
 int main()
 {
+    
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
     PerlinNoise2D pn(86);
@@ -60,7 +61,7 @@ int main()
     chunkOutline.setPosition(mapM.findChunkStartP(bestValueID));
    
     RoadManager roads(bestValueID,&window);
-    roads.applyRules(6);
+    roads.applyRules(20);
   
 
     
