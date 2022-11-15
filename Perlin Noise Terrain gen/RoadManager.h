@@ -2,6 +2,8 @@
 #include "LSystem.h"
 #include "MapManager.h"
 
+#include <limits>
+
 class Node
 {
 public:
@@ -51,7 +53,9 @@ public:
 		{
 			if (element->parent != NULL)
 			{
-				if (element->parent->endPos.x == point.x)
+				float diffx = abs(element->parent->endPos.x - point.x);
+
+				if (diffx < std::numeric_limits<float>::epsilon())
 				{
 					if ((element->parent->endPos.y <= point.y && point.y >= element->endPos.y) || (element->parent->endPos.y >= point.y && point.y <= element->endPos.y))
 					{
@@ -59,7 +63,9 @@ public:
 					}
 				}
 
-				if (element->parent->endPos.y == point.y)
+				float diffy = abs(element->parent->endPos.y - point.y);
+
+				if (diffy < std::numeric_limits<float>::epsilon())
 				{
 					if ((element->parent->endPos.x <= point.x && point.x >= element->endPos.x) || (element->parent->endPos.x >= point.x && point.x <= element->endPos.x))
 					{

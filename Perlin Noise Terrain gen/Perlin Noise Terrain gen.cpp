@@ -61,7 +61,7 @@ int main()
     chunkOutline.setPosition(mapM.findChunkStartP(bestValueID));
    
     RoadManager roads(bestValueID,&window);
-    roads.applyRules(20);
+    roads.applyRules(2);
   
 
     

@@ -15,7 +15,6 @@ public:
 	PerlinNoise(GridManager* grid);
 	~PerlinNoise();
 
-	Singleton singleton;
 	int nOctaveCount = 1;
 	float bias = 2;
 

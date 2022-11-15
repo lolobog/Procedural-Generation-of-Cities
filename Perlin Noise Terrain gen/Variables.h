@@ -9,10 +9,9 @@ const int chunkWidth = 200, const chunkHeight = 200;
 class Singleton
 {
 private:
-    
+    Singleton() {};
 
 public:
-    Singleton() {};
 
     static Singleton* Instance()
     {

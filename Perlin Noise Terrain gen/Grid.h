@@ -61,7 +61,7 @@ public:
 	
 
 private:
-	Singleton singleton;
+	
 	sf::RenderWindow* pWindow;
 
 };
