@@ -18,13 +18,13 @@ std::vector<double> mapVector(std::vector<double> noiseLevels,float start1, floa
     return mappedValues;
 }
 
-void GenerateAndDisplayNoise(sf::Image img,PerlinNoise2D &pn,MapManager &mapM,int octaves,int blendLvl, sf::RectangleShape &chunkOutline,sf::Texture &noise,sf::Sprite &sprite,int &bestValueID)
+void GenerateAndDisplayNoise(sf::Image img,PerlinNoise2D* pn,MapManager &mapM,int octaves,int blendLvl, sf::RectangleShape &chunkOutline,sf::Texture &noise,sf::Sprite &sprite,int &bestValueID)
 {
-    std::vector<double> noiseLevels = pn.generateNoise(pn, octaves, noiseLevels); //Generate the perlin noise
-    noiseLevels = pn.blendNoise(noiseLevels, blendLvl); //Blend the perlin noise to look more uniform
+    std::vector<double> noiseLevels = pn->generateNoise(*pn, octaves, noiseLevels); //Generate the perlin noise
+    noiseLevels = pn->blendNoise(noiseLevels, blendLvl); //Blend the perlin noise to look more uniform
 
     noiseLevels = mapVector(noiseLevels, 1, 2, 0, 255);
-    pn.noiseValues = noiseLevels;
+    pn->noiseValues = noiseLevels;
     mapM.colorImg(img, noiseLevels);
 
    
@@ -47,9 +47,7 @@ void GenerateAndDisplayNoise(sf::Image img,PerlinNoise2D &pn,MapManager &mapM,in
     std::cout << "Chuck start point X: " << mapM.findChunkX(bestValueID) << " Y: " << mapM.findChunkY(bestValueID) << '\n';
 
     
-    chunkOutline.setOutlineColor(sf::Color::Black);
-    chunkOutline.setOutlineThickness(10);
-    chunkOutline.setFillColor(sf::Color::Transparent);
+
     chunkOutline.setPosition(mapM.findChunkStartP(bestValueID));
 
     
@@ -63,9 +61,10 @@ int main()
     sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
     ImGui::SFML::Init(window);
 
-
-    PerlinNoise2D pn(90); //good ones: 86
-    MapManager mapM(&pn);
+    
+    int seed = 86;
+    PerlinNoise2D* pn= new PerlinNoise2D(&seed); //good ones: 86
+    MapManager mapM(pn);
    
     sf::Image img;
     img.create(imgWidth, imgHeight);
@@ -74,7 +73,16 @@ int main()
     int blendLvl = 8;
     int bestValueID=0;
 
+    int noRules ;
+
+    bool hasGeneratedNoise = false;
+    bool showSelectedChunk = false;
+
     sf::RectangleShape chunkOutline(sf::Vector2f(chunkWidth, chunkHeight));
+    chunkOutline.setFillColor(sf::Color::Transparent);
+    chunkOutline.setOutlineColor(sf::Color::Transparent);
+    chunkOutline.setOutlineThickness(10);
+
     sf::Texture noise;
     sf::Sprite sprite;
 
@@ -150,33 +158,88 @@ int main()
 
         ImGui::Begin("Window");
         ImGui::Text("Generate noise and streets:");
-        if (ImGui::Button("Generate"))
+        if (ImGui::Button("Generate ALL"))
         {
             GenerateAndDisplayNoise(img, pn, mapM, octaves, blendLvl, chunkOutline, noise, sprite, bestValueID);
-            std::cout << bestValueID;
             if (roads != NULL)
             {
                 delete roads;
                 roads = NULL;
             }
+            if (hasGeneratedNoise == false)
+                hasGeneratedNoise = true;
 
-            roads = new RoadManager(bestValueID, &window, 1, &pn);
-            roads->applyRules(2);
+            roads = new RoadManager(bestValueID, &window, 1, pn);
+            roads->applyRules(noRules);
            
-            std::cout << "Reset seed\n";
+          
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Generate Noise"))
+        {
+            if (pn != NULL)
+            {
+                delete pn;
+                pn = NULL;
+            }
+
+            pn = new PerlinNoise2D(&seed);
+            GenerateAndDisplayNoise(img, pn, mapM, octaves, blendLvl, chunkOutline, noise, sprite, bestValueID);
+
+            if (hasGeneratedNoise == false)
+                hasGeneratedNoise = true;
+
+         
+        }
+        ImGui::SameLine();
         if (ImGui::Button("Generate Streets"))
         {
             if (roads != NULL)
             {
                 delete roads;
                 roads = NULL;
-                roads = new RoadManager(bestValueID, &window, 1, &pn);
-                roads->applyRules(2);
+                
+            }
+            if (hasGeneratedNoise == true)
+            {
+                roads = new RoadManager(bestValueID, &window, 1, pn);
+                roads->applyRules(noRules);
             }
 
            
         }
+        ImGui::Text("Noise Generation parameters:");
+        ImGui::InputInt("Noise seed", &seed);
+        if (ImGui::InputInt("Noise octaves", &octaves))
+        {
+            if (octaves > 9)
+                octaves = 9;
+            if (octaves < 1)
+                octaves = 1;
+        }
+        if (ImGui::InputInt("Noise blending level", &blendLvl))
+        {
+            if (blendLvl < 1)
+                blendLvl = 1;
+        }
+        if (ImGui::Checkbox("Show selected chunk", &showSelectedChunk))
+        {
+            if (showSelectedChunk == true)
+            {
+                chunkOutline.setOutlineColor(sf::Color::Black);
+            }
+            else
+            {
+                chunkOutline.setOutlineColor(sf::Color::Transparent);
+            }
+        }
+        ImGui::Text("Street Generation parameters:");
+
+        if (ImGui::InputInt("Noise octaves", &noRules))
+        {
+
+        }
+       
         ImGui::End();
 
         ImGui::ShowDemoWindow();

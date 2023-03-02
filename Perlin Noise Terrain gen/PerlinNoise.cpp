@@ -21,15 +21,14 @@ PerlinNoise2D::PerlinNoise2D()
 	p.insert(p.end(), p.begin(), p.end());
 }
 
-PerlinNoise2D::PerlinNoise2D(unsigned int seed)
+void PerlinNoise2D::initializeRandomEngine(int* seed)
 {
-	p.resize(256);
-	
-	// Fill p with values from 0 to 255
+		// Fill p with values from 0 to 255
 	std::iota(p.begin(), p.end(), 0);
+	initialPermutationV = p;
 	
 	// Initialize a random engine with seed
-	std::default_random_engine engine(seed);
+	std::default_random_engine engine(*seed);
 	
 	// Suffle  using the above random engine
 	std::shuffle(p.begin(), p.end(), engine);
@@ -37,6 +36,33 @@ PerlinNoise2D::PerlinNoise2D(unsigned int seed)
 	// Duplicate the permutation vector
 	p.insert(p.end(), p.begin(), p.end());
 }
+
+void PerlinNoise2D::generateNoiseWithSeed(int* seed)
+{
+	p = initialPermutationV;
+	// Initialize a random engine with seed
+	std::default_random_engine engine(*seed);
+
+	// Suffle  using the above random engine
+	std::shuffle(p.begin(), p.end(), engine);
+
+
+}
+
+
+
+PerlinNoise2D::PerlinNoise2D( int* seed)
+{
+	p.resize(256);
+	
+	givenSeed = seed;
+	initializeRandomEngine(seed);
+}
+
+
+
+
+
 
 double PerlinNoise2D::fade(double t) {
 	return t * t * t * (t * (t * 6 - 15) + 10);
@@ -87,6 +113,7 @@ double PerlinNoise2D::noise(double x, double y, double z)
 }
 std::vector<double> PerlinNoise2D::generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels)
 {
+	//initializeRandomEngine(givenSeed);
 	for (int i = 0; i < imgWidth; i++)
 	{
 		for (int j = 0; j < imgHeight; j++)
@@ -112,6 +139,8 @@ std::vector<double> PerlinNoise2D::generateNoise(PerlinNoise2D pn, int octaves, 
 	}
 	return noiseLevels;
 }
+
+
 
 std::vector<double> PerlinNoise2D::blendNoise(std::vector<double>noiseCopy, int blendLvl)
 {

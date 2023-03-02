@@ -1,17 +1,14 @@
-﻿  RoadManager.cpp
+﻿  Perlin Noise Terrain gen.cpp
 D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\LSystem.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Variables.h(6,28): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
 D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Variables.h(7,29): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
 D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\RoadManager.h(125,21): warning C4018: '<': signed/unsigned mismatch
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\RoadManager.cpp(43,21): warning C4018: '<': signed/unsigned mismatch
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\RoadManager.cpp(430,73): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(9,19): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(14,23): warning C4018: '<': signed/unsigned mismatch
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(16,52): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
           with
           [
-              T=float
+              _Ty=double
           ]
-D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\RoadManager.cpp(430,57): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(60,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Perlin Noise Terrain gen.vcxproj -> D:\Perlin-Noise-Terrain-Generation\Debug\Perlin Noise Terrain gen.exe
