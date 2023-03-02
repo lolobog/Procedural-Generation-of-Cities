@@ -1,34 +1,10 @@
 #pragma once
-#include "Grid.h"
 #include <cmath>
 #include <random>
 #include <algorithm>
 #include <numeric>
-
-class PerlinNoise
-{
-private:
-	GridManager* pGrid;
-
-
-public:
-	PerlinNoise(GridManager* grid);
-	~PerlinNoise();
-
-	int nOctaveCount = 1;
-	float bias = 2;
-
-	// For 1D generation
-	int outputSize;
-	std::vector <float> seed;
-	std::vector<float>noise;
-
-
-	void PerlinNoise1D();
-	void DrawPerlinNoise1D();
-
-
-};
+#include <SFML/Graphics.hpp>
+#include "Variables.h"
 
 //https://github.com/sol-prog/Perlin_Noise - sol-prog Paul Silisteanu
 class PerlinNoise2D
@@ -49,6 +25,8 @@ public:
 	double noise(double x, double y, double z);
 	std::vector<double> blendNoise(std::vector<double>noiseCopy, int blendLvl);
 	std::vector<double> generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels);
+
+	std::vector<double> noiseValues;
 	
 
 	

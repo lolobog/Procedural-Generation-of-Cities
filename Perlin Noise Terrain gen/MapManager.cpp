@@ -1,4 +1,10 @@
 #include "MapManager.h"
+#include <iostream>
+
+MapManager::MapManager(PerlinNoise2D* pn)
+{
+    perlinRef = pn;
+}
 
 MapManager::MapManager()
 {
@@ -130,8 +136,35 @@ sf::Vector2f MapManager::findChunkCenter(int bestValueID)
 
 bool MapManager::isInChunkBounds(sf::Vector2f point,int chunkID)
 {
-    if (point.x >= findChunkX(chunkID) && point.y >= findChunkY(chunkID) && point.x <= findChunkX(chunkID) + chunkWidth && point.y <= findChunkY(chunkID) + chunkHeight)
+   
+
+    if (point.x > findChunkX(chunkID) && point.y > findChunkY(chunkID) && point.x < findChunkX(chunkID) + chunkWidth && point.y < findChunkY(chunkID) + chunkHeight)
+    {
+        
         return true;
+   
+    }
     else
-        return false;
+    {
+         
+       return false;
+    }
 }
+
+bool MapManager::isInUndesireableTerrain(sf::Vector2f point)
+{
+    if (perlinRef->noiseValues[point.x * imgWidth+point.y] > 80 && perlinRef->noiseValues[point.x * imgWidth + point.y] < 150)
+    {
+       
+        return false;
+    }
+
+
+    return true;
+
+    
+}
+
+
+
+

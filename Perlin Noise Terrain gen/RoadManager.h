@@ -11,8 +11,8 @@ public:
 	sf::Vector2f endPos;
 	char nodeType;
 	std::vector<Node*>nodeLinks;
-
 	bool rulesApplied = false;
+private:
 
 };
 
@@ -36,14 +36,16 @@ public:
 
 	void newLink(Node* targetNode, sf::Vector2f Pos,char nodeInfo)
 	{
-		Node* newNode= new Node();
+		
+		Node* newNode = new Node();
 		newNode->parent = targetNode;
 		newNode->endPos = Pos;
 		newNode->nodeType = nodeInfo;
 
+		CurrentNodes.push_back(newNode);
 		targetNode->nodeLinks.push_back(newNode);
 		AllNodes.push_back(newNode);
-		CurrentNodes.push_back(newNode);
+		
 
 	}
 
@@ -52,28 +54,39 @@ public:
 		for (auto element : AllNodes)
 		{
 			if (element->parent != NULL)
-			{
-				float diffx = abs(element->parent->endPos.x - point.x);
+			{				
+				sf::Vector2f point1(element->parent->endPos.x, element->parent->endPos.y);
+				sf::Vector2f point2(element->endPos.x, element->endPos.y);
 
-				if (diffx < std::numeric_limits<float>::epsilon())
+				float dxc = point.x - point1.x;
+				float dyc = point.y - point1.y;
+
+				float dxl = point2.x - point1.x;
+				float dyl = point2.y - point1.y;
+
+				float cross = dxc * dyl - dyc * dxl;
+
+				if (cross != 0)
 				{
-					if ((element->parent->endPos.y <= point.y && point.y >= element->endPos.y) || (element->parent->endPos.y >= point.y && point.y <= element->endPos.y))
-					{
-						return true;
-					}
+					return false;
+				}
+				else
+				{
+					if (abs(dxl) >= abs(dyl))
+						return dxl > 0 ?
+						point1.x <= point.x && point.x <= point2.x :
+						point2.x <= point.x && point.x <= point1.x;
+					else
+						return dyl > 0 ?
+						point1.y <= point.y && point.y <= point2.y :
+						point2.y <= point.y && point.y <= point1.y;
 				}
 
-				float diffy = abs(element->parent->endPos.y - point.y);
+				
 
-				if (diffy < std::numeric_limits<float>::epsilon())
-				{
-					if ((element->parent->endPos.x <= point.x && point.x >= element->endPos.x) || (element->parent->endPos.x >= point.x && point.x <= element->endPos.x))
-					{
-						return true;
-					}
-				}
+			
 			}
-
+			
 
 		}
 
@@ -92,7 +105,7 @@ class RoadManager :public LSystem,public MapManager
 {
 public:
 	
-	RoadManager(int chunkID,sf::RenderWindow* window);
+	RoadManager(int chunkID,sf::RenderWindow* window,int roadsType,PerlinNoise2D* pn);
 	~RoadManager();
 
 
@@ -106,7 +119,9 @@ public:
 	void drawRoads();
 	int random(int low, int high);
 private:
-	int roadLength = 25;
+	int roadLength = 20;
 	int currentChunk;
+	int rType = 1;
 	sf::RenderWindow* refWindow;
+	
 };

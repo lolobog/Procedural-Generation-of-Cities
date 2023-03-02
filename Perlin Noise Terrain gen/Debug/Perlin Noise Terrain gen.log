@@ -1,13 +1,19 @@
 ﻿  Perlin Noise Terrain gen.cpp
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\LSystem.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Variables.h(5,50): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Variables.h(6,52): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(6,19): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(11,23): warning C4018: '<': signed/unsigned mismatch
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(13,52): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\LSystem.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Variables.h(6,28): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Variables.h(7,29): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(9,19): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(14,23): warning C4018: '<': signed/unsigned mismatch
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(16,52): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
           with
           [
               _Ty=double
           ]
-D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(21,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Perlin Noise Terrain gen.vcxproj -> D:\S210641\Projects\Perlin Noise Terrain gen\Debug\Perlin Noise Terrain gen.exe
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(62,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  RoadManager.cpp
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\LSystem.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Variables.h(6,28): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\Variables.h(7,29): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
+D:\Perlin-Noise-Terrain-Generation\Perlin Noise Terrain gen\RoadManager.cpp(42,21): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Perlin Noise Terrain gen.vcxproj -> D:\Perlin-Noise-Terrain-Generation\Debug\Perlin Noise Terrain gen.exe

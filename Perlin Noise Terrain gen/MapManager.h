@@ -6,6 +6,7 @@ class MapManager
 {
 public:
 	
+	MapManager(PerlinNoise2D* pn);
 	MapManager();
 	~MapManager();
 	
@@ -17,6 +18,10 @@ public:
 	sf::Vector2f findChunkCenter(int bestValueID);
 	sf::Vector2f findChunkStartP(int bestValueID);
 	bool isInChunkBounds(sf::Vector2f point,int chunkID);
+	bool isInUndesireableTerrain(sf::Vector2f point);
+
+
+	PerlinNoise2D* perlinRef;
 	
 
 

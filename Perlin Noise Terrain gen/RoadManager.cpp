@@ -1,12 +1,14 @@
 #include "RoadManager.h"
 
-RoadManager::RoadManager(int chunkID,sf::RenderWindow* window)
+RoadManager::RoadManager(int chunkID,sf::RenderWindow* window,int roadsType, PerlinNoise2D* pn)
 {
+	perlinRef = pn;
 	variables = { 'C' ,'F','R','L','B'};
 	output = { 'C' };
 	RoadNetwork->setRoot(findChunkCenter(chunkID),'C');
 	currentChunk = chunkID;
 	refWindow = window;
+	rType = roadsType;
 }
 
 RoadManager::~RoadManager()
@@ -26,130 +28,191 @@ int RoadManager::random(int low, int high)
 
 
 
+
+
 void RoadManager::applyRules(int iterations)
 {
-	
-
+	float generationBias = 100;
 	
 
 	while (iterations > 0)
 	{
 		
-
-		for (auto element : RoadNetwork->CurrentNodes)
+		
+		for (int i = 0; i < RoadNetwork->CurrentNodes.size(); i++)
 		{
-			if (element->rulesApplied == false)
-			{
-				switch (element->nodeType)
+			Node* element = RoadNetwork->CurrentNodes[i];
+
+			int positionsProcessed = 0;
+			 
+				if (element->rulesApplied == false)
 				{
+					switch (element->nodeType)
+					{
+
+					case 'C':
+					{
+						sf::Vector2f pos;
+						pos = sf::Vector2f(element->endPos.x , element->endPos.y + roadLength);
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+							RoadNetwork->newLink(element, pos, 'F');
+
+						pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+							RoadNetwork->newLink(element, pos, 'B');
+				
+						pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y );
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+							RoadNetwork->newLink(element, pos, 'R');
+				
+						pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y );
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+							RoadNetwork->newLink(element, pos, 'L');
+			
 					
-				case 'C':
-				{
 
-					//if(random(1,2)==2)
-					if(isInChunkBounds(sf::Vector2f(element->endPos.x + 10, element->endPos.y),currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x + roadLength, element->endPos.y))==false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x + roadLength, element->endPos.y), 'F');
-					//if (random(1, 2) == 2)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
-					//if (random(1, 2) == 2)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
-					//if (random(1, 2) == 2)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x - 10, element->endPos.y), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x - roadLength, element->endPos.y)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x - roadLength, element->endPos.y), 'B');
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
 
-					RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						break;
+					}
+					case 'F':
+					{
+						sf::Vector2f pos;
 
-					break;
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y + roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false&&isInUndesireableTerrain(pos)==false)
+								RoadNetwork->newLink(element, pos, 'F');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'L');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'R');
+						}
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+
+						break;
+					}
+					case 'R':
+					{
+						sf::Vector2f pos;
+
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'F');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'R');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'B');
+						}
+
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						break;
+					}
+					case 'L':
+					{
+						sf::Vector2f pos;
+
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'B');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'L');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'F');
+						}
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						break;
+					}
+					case 'B':
+					{
+						sf::Vector2f pos;
+
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'B');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'R');
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+								RoadNetwork->newLink(element, pos, 'L');
+						}
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						break;
+					}
+
+
+
+					default:
+						break;
+					}
 				}
-				case 'F':
-				{
-					if (random(1, 3) == 2|| random(1, 3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x + 10, element->endPos.y), currentChunk) &&RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x + roadLength, element->endPos.y))==false)
-						RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x + roadLength, element->endPos.y), 'F');
-					if (random(1, 3) == 2 || random(1, 3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
-					if (random(1, 3) == 2 || random(1, 3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
-
-					RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
-
-					break;
-				}
-				case 'R':
-				{
-					if (random(1, 3) == 3|| random(1, 3) == 2)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x + 10, element->endPos.y), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x + roadLength, element->endPos.y)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.y + roadLength, element->endPos.y), 'F');
-					if (random(1, 3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
-					if (random(1, 3) == 3 || random(1, 3) == 2)
-						if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
-							RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
-
-					RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
-					break;
-				}
-				case 'L':
-				{
-					if (random(1, 3) == 3 || random(1, 3) == 2)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk)&& RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
-					if (random(1,3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x - 10, element->endPos.y), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x - roadLength, element->endPos.y)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.y - roadLength, element->endPos.y), 'B');
-					if (random(1, 3) == 3 || random(1, 3) == 2)
-						if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk) && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
-							RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
-
-					RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
-					break;
-				}
-				case 'B':
-				{
-					if (random(1, 2) == 2 || random(1, 3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x - 10, element->endPos.y), currentChunk))//&& RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x - roadLength, element->endPos.y)) == false)
-						RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x - roadLength, element->endPos.y), 'B');
-					if (random(1, 2) == 2 || random(1, 3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y + 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y + roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y + roadLength), 'R');
-					if (random(1, 2) == 2 || random(1, 3) == 3)
-					if (isInChunkBounds(sf::Vector2f(element->endPos.x, element->endPos.y - 10), currentChunk))// && RoadNetwork->isIntersecting(sf::Vector2f(element->endPos.x, element->endPos.y - roadLength)) == false)
-					RoadNetwork->newLink(element, sf::Vector2f(element->endPos.x, element->endPos.y - roadLength), 'L');
-
-					RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
-					break;
-				}
-
-
-
-				default:
-					break;
-				}
-			}
+			
+				generationBias -= 1;
 			element->rulesApplied = true;
 		}
-		
+	
 		iterations--;
 	}
 }
 
 void RoadManager::drawRoads()
 {
-	for (auto element : RoadNetwork->AllNodes)
+	if (this != NULL)
 	{
-		if (element->parent != NULL)
+		for (auto element : RoadNetwork->AllNodes)
 		{
-			sf::Vertex line[] =
+			if (element->parent != nullptr)
 			{
-				sf::Vertex(element->parent->endPos),
-				sf::Vertex(element->endPos)
-			};
-			refWindow->draw(line, 2, sf::Lines);
+
+				sf::Vertex line[] =
+				{
+					sf::Vertex(element->parent->endPos),
+					sf::Vertex(element->endPos)
+				};
+				refWindow->draw(line, 2, sf::Lines);
+			}
 		}
 	}
 }
