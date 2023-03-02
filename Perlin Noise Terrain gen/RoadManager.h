@@ -101,6 +101,8 @@ private:
 
 
 
+
+
 class RoadManager :public LSystem,public MapManager
 {
 public:
@@ -110,7 +112,7 @@ public:
 
 
 	NodeTree *RoadNetwork=new NodeTree;
-
+	std::vector<sf::Vector2f> plots;
 	
 	
 	
@@ -118,6 +120,20 @@ public:
 	void applyRules(int iterations);
 	void drawRoads();
 	int random(int low, int high);
+	bool isPositionPlotted(sf::Vector2f position)
+	{
+		for (int i = 0; i < plots.size(); i++)
+		{
+			if (plots[i] == position)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
 private:
 	int roadLength = 20;
 	int currentChunk;

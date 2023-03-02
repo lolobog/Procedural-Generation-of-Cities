@@ -64,7 +64,7 @@ int main()
     ImGui::SFML::Init(window);
 
 
-    PerlinNoise2D pn(86); //good ones: 86
+    PerlinNoise2D pn(90); //good ones: 86
     MapManager mapM(&pn);
    
     sf::Image img;
@@ -162,7 +162,20 @@ int main()
 
             roads = new RoadManager(bestValueID, &window, 1, &pn);
             roads->applyRules(2);
+           
             std::cout << "Reset seed\n";
+        }
+        if (ImGui::Button("Generate Streets"))
+        {
+            if (roads != NULL)
+            {
+                delete roads;
+                roads = NULL;
+                roads = new RoadManager(bestValueID, &window, 1, &pn);
+                roads->applyRules(2);
+            }
+
+           
         }
         ImGui::End();
 
@@ -180,6 +193,7 @@ int main()
        
 
         window.display();
+       // sf::sleep(sf::milliseconds(10));
     }
    ImGui::SFML::Shutdown();
     return 0;
