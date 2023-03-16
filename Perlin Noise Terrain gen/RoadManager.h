@@ -117,6 +117,8 @@ public:
 	
 	
 	
+	void GenerateRoadChunk(Node* element, float plotGenerationChance, char dir, float length);
+
 	void applyRules(int iterations);
 	void drawRoads();
 	int random(int low, int high);
