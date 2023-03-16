@@ -69,11 +69,14 @@ int main()
     sf::Image img;
     img.create(imgWidth, imgHeight);
 
+    //Noise values
     int octaves = 8;
     int blendLvl = 8;
     int bestValueID=0;
 
-    int noRules ;
+    //Street Network values
+    int rulesNumber=1 ;
+    int roadsType = 1;
 
     bool hasGeneratedNoise = false;
     bool showSelectedChunk = false;
@@ -169,8 +172,8 @@ int main()
             if (hasGeneratedNoise == false)
                 hasGeneratedNoise = true;
 
-            roads = new RoadManager(bestValueID, &window, 1, pn);
-            roads->applyRules(noRules);
+            roads = new RoadManager(bestValueID, &window, &roadsType, pn);
+            roads->applyRules(rulesNumber);
            
           
         }
@@ -202,8 +205,8 @@ int main()
             }
             if (hasGeneratedNoise == true)
             {
-                roads = new RoadManager(bestValueID, &window, 1, pn);
-                roads->applyRules(noRules);
+                roads = new RoadManager(bestValueID, &window, &roadsType, pn);
+                roads->applyRules(rulesNumber);
             }
 
            
@@ -235,9 +238,29 @@ int main()
         }
         ImGui::Text("Street Generation parameters:");
 
-        if (ImGui::InputInt("Noise octaves", &noRules))
+        if (ImGui::InputInt("Rules", &rulesNumber))
         {
+            if (rulesNumber < 1)
+            {
+                rulesNumber = 1;
+            }
 
+            if (rulesNumber > 5)
+            {
+                rulesNumber = 5;
+            }
+        }
+
+        if (ImGui::InputInt("Roads Type: 1.Grid Style; 2.Spider web", &roadsType))
+        {
+            if (roadsType < 1)
+            {
+                roadsType = 1;
+            }
+            if (roadsType > 2)
+            {
+                roadsType = 2;
+            }
         }
        
         ImGui::End();

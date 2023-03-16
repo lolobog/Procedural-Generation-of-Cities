@@ -1,6 +1,6 @@
 #include "RoadManager.h"
 
-RoadManager::RoadManager(int chunkID,sf::RenderWindow* window,int roadsType, PerlinNoise2D* pn)
+RoadManager::RoadManager(int chunkID,sf::RenderWindow* window,int* roadsType, PerlinNoise2D* pn)
 {
 	perlinRef = pn;
 	variables = { 'C' ,'F','R','L','B'};
@@ -8,7 +8,7 @@ RoadManager::RoadManager(int chunkID,sf::RenderWindow* window,int roadsType, Per
 	RoadNetwork->setRoot(findChunkCenter(chunkID),'C');
 	currentChunk = chunkID;
 	refWindow = window;
-	rType = roadsType;
+	typeOfRoads = roadsType;
 }
 
 RoadManager::~RoadManager()
@@ -34,19 +34,38 @@ void RoadManager::applyRules(int iterations)
 {
 	float generationBias = 100;
 	float plotGenerationChance = 10;
+	int iterationNodes = 0;
+	int i = 0;
+	
+	sf::Clock timer;
 	
 
-	while (iterations > 0)
+	while (iterations > 0&&timer.getElapsedTime().asSeconds()<60)
 	{
-		
-		
-		for (int i = 0; i < RoadNetwork->CurrentNodes.size(); i++)
+	
+		if (iterationNodes == 0)
 		{
+			iterationNodes = 4;
+		}
+		else
+		{
+			iterationNodes = iterationNodes * 3;
+		}
+		
+		for (i ; i < RoadNetwork->CurrentNodes.size(); i++)
+		{
+			std::cout << iterationNodes+'\n';
+			if (i > iterationNodes)
+			{
+				std::cout << "Reached iteration limit \n";
+				break;
+			}
 			Node* element = RoadNetwork->CurrentNodes[i];
 
-			int positionsProcessed = 0;
 			 
-				if (element->rulesApplied == false)
+			if (element->rulesApplied == false)
+			{
+				if (*typeOfRoads == 1)
 				{
 					switch (element->nodeType)
 					{
@@ -54,7 +73,7 @@ void RoadManager::applyRules(int iterations)
 					case 'C':
 					{
 						sf::Vector2f pos;
-						pos = sf::Vector2f(element->endPos.x , element->endPos.y + roadLength);
+						pos = sf::Vector2f(element->endPos.x, element->endPos.y + roadLength);
 						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
 						{
 							RoadNetwork->newLink(element, pos, 'F');
@@ -77,7 +96,7 @@ void RoadManager::applyRules(int iterations)
 						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
 						{
 							RoadNetwork->newLink(element, pos, 'B');
-						
+
 							if (random(1, 100) <= plotGenerationChance)
 							{
 								pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
@@ -92,8 +111,8 @@ void RoadManager::applyRules(int iterations)
 								}
 							}
 						}
-				
-						pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y );
+
+						pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
 						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
 						{
 							RoadNetwork->newLink(element, pos, 'R');
@@ -111,8 +130,8 @@ void RoadManager::applyRules(int iterations)
 								}
 							}
 						}
-				
-						pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y );
+
+						pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
 						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
 						{
 							RoadNetwork->newLink(element, pos, 'L');
@@ -130,10 +149,11 @@ void RoadManager::applyRules(int iterations)
 								}
 							}
 						}
-			
-					
+
+
 
 						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
 
 						break;
 					}
@@ -206,6 +226,7 @@ void RoadManager::applyRules(int iterations)
 						}
 
 						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
 
 						break;
 					}
@@ -279,6 +300,7 @@ void RoadManager::applyRules(int iterations)
 
 
 						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
 						break;
 					}
 					case 'L':
@@ -350,6 +372,7 @@ void RoadManager::applyRules(int iterations)
 						}
 
 						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
 						break;
 					}
 					case 'B':
@@ -421,6 +444,7 @@ void RoadManager::applyRules(int iterations)
 						}
 
 						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
 						break;
 					}
 
@@ -430,6 +454,397 @@ void RoadManager::applyRules(int iterations)
 						break;
 					}
 				}
+				else
+					if (*typeOfRoads == 2)
+					{
+						switch (element->nodeType)
+					{
+
+					case 'C':
+					{
+						sf::Vector2f pos;
+						pos = sf::Vector2f(element->endPos.x, element->endPos.y + roadLength);
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+						{
+							RoadNetwork->newLink(element, pos, 'F');
+							if (random(1, 100) <= plotGenerationChance)
+							{
+								pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+								pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+							}
+						}
+
+						pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+						{
+							RoadNetwork->newLink(element, pos, 'B');
+
+							if (random(1, 100) <= plotGenerationChance)
+							{
+								pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+								pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+							}
+						}
+
+						pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+						{
+							RoadNetwork->newLink(element, pos, 'R');
+							if (random(1, 100) <= plotGenerationChance)
+							{
+								pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+								pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+							}
+						}
+
+						pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
+						if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false)
+						{
+							RoadNetwork->newLink(element, pos, 'L');
+							if (random(1, 100) <= plotGenerationChance)
+							{
+								pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+								pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+								if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+								{
+									plots.push_back(pos);
+								}
+							}
+						}
+
+
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
+
+						break;
+					}
+					case 'F':
+					{
+						sf::Vector2f pos;
+
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y + roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'F');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'L');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'R');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
+
+						break;
+					}
+					case 'R':
+					{
+						sf::Vector2f pos;
+
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y + roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'F');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'R');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'B');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
+						break;
+					}
+					case 'L':
+					{
+						sf::Vector2f pos;
+
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'B');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'L');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'F');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
+						break;
+					}
+					case 'B':
+					{
+						sf::Vector2f pos;
+
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x, element->endPos.y - roadLength);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'B');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x + roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'R');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+						if (random(1, 100) <= generationBias)
+						{
+							pos = sf::Vector2f(element->endPos.x - roadLength, element->endPos.y);
+							if (isInChunkBounds(pos, currentChunk) && RoadNetwork->isIntersecting(pos) == false && isInUndesireableTerrain(pos) == false)
+							{
+								RoadNetwork->newLink(element, pos, 'L');
+								if (random(1, 100) <= plotGenerationChance)
+								{
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
+									if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+									pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y - roadLength / 2);
+									if (isPositionPlotted(pos) && isInUndesireableTerrain(pos) == false)
+									{
+										plots.push_back(pos);
+									}
+								}
+							}
+						}
+
+						RoadNetwork->CurrentNodes.erase(RoadNetwork->CurrentNodes.begin());
+						i--;
+						break;
+					}
+
+
+
+					default:
+						break;
+					}
+					}
+			}
 			
 				generationBias -= 0.5;
 			element->rulesApplied = true;

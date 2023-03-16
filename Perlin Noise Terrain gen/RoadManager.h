@@ -107,7 +107,7 @@ class RoadManager :public LSystem,public MapManager
 {
 public:
 	
-	RoadManager(int chunkID,sf::RenderWindow* window,int roadsType,PerlinNoise2D* pn);
+	RoadManager(int chunkID,sf::RenderWindow* window,int* roadsType,PerlinNoise2D* pn);
 	~RoadManager();
 
 
@@ -135,6 +135,7 @@ public:
 
 
 private:
+	int* typeOfRoads;
 	int roadLength = 20;
 	int currentChunk;
 	int rType = 1;
