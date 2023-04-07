@@ -75,7 +75,7 @@ int main()
     int bestValueID=0;
 
     //Street Network values
-    int rulesNumber=1 ;
+    int rulesNumber=5 ;
     int roadsType = 1;
 
     bool hasGeneratedNoise = false;
