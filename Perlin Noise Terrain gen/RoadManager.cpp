@@ -9,6 +9,7 @@ RoadManager::RoadManager(int chunkID,sf::RenderWindow* window,int* roadsType, Pe
 	currentChunk = chunkID;
 	refWindow = window;
 	typeOfRoads = roadsType;
+	
 }
 
 RoadManager::~RoadManager()
@@ -81,7 +82,6 @@ void RoadManager::applyRules(int iterations)
 {
 	float generationBias = 100;
 	float plotGenerationChance = 10;
-	int iterationNodes = 0;
 	int i = 0;
 	
 	sf::Clock timer;
@@ -248,6 +248,25 @@ void RoadManager::drawRoads()
 
 			}
 
+			generatePlots(RoadNetwork->AllNodes, NULL, NULL, 0);
+			for (auto plot : plots)
+			{
+				
+				sf::ConvexShape plotOutline;
+				plotOutline.setPointCount(plot.size()+1);
+
+				for (int i = 0; i < plot.size(); i++)
+				{
+					plotOutline.setPoint(i, plot[i]->endPos);
+				}
+				plotOutline.setPoint(plot.size(), plot[0]->endPos);
+				plotOutline.setFillColor(sf::Color(255, 255, 255, 30));
+				plotOutline.setOutlineColor(sf::Color(255, 0, 0, 255));
+				plotOutline.setOutlineThickness(2);
+
+				refWindow->draw(plotOutline);
+				
+			}
 			/*for (auto element : plots)
 			{
 
@@ -259,37 +278,115 @@ void RoadManager::drawRoads()
 		}
 	}
 
-	cout << numberOfRoads<<'\n';
+	//cout << numberOfRoads<<'\n';
 
 	
 }
 
-void RoadManager::generatePlots(std::vector<Node*>AllNodes, Node* previousNode, Node* targetNode, int depth)
+
+bool RoadManager::plotExsists(vector<Node*> plot)
 {
-	for (auto element : AllNodes)
+	
+	for (auto element : plots)
 	{
-		if (element->nodeLinks.size() > 0)
+		int matchingPlots = 0;
+		for (auto x : plot)
 		{
-
-
-			if (targetNode == NULL)
+		
+			for (auto y : element)
 			{
-				targetNode = element;	
-			}
-
-
-			if (targetNode != previousNode)
-			{
-				if (element == targetNode)
+				if (y == x)
 				{
-
+					matchingPlots++;
 				}
 			}
-			generatePlots(element->nodeLinks, element, targetNode, depth + 1);
+		}
+
+		if (matchingPlots == plot.size())
+		{
+			
+			return true;
 		}
 	}
 	
-	
+	return false;
+}
+
+bool RoadManager::isInTempPlot(Node* node)
+{
+	for (auto element : tempPlot)
+	{
+		if (node == element)
+			return true;
+	}
+	return false;
+}
+
+void RoadManager::generatePlots(std::vector<Node*>AllNodes, Node* previousNode, Node* targetNode, int depth)
+{
+	int i = 0;
+	while (i < AllNodes.size())
+	{
+		Node* element = AllNodes[i];
+
+		
+		if (isInTempPlot(element) == false||(element==targetNode&&tempPlot.size()>2 && element != tempPlot[tempPlot.size() - 3]))
+		{
+			if (depth < 4)
+			{
+				bool nodeFound = false;
+				tempPlot.push_back(element);
+
+				if (targetNode != previousNode )
+				{
+					if (element->parent == targetNode)
+					{
+						nodeFound = true;
+						if (plotExsists(tempPlot) == false)
+						{
+							plots.push_back(tempPlot);
+						}
+						tempPlot.pop_back();
+						
+
+					}
+
+
+					if (element == targetNode )
+					{
+						nodeFound = true;
+						if (plotExsists(tempPlot) == false)
+						{
+							plots.push_back(tempPlot);
+						}
+						tempPlot.pop_back();
+					
+					}
+				}
+
+				if (targetNode == NULL)
+				{
+					targetNode = element;
+				}
+
+				
+
+
+				if (nodeFound == false)
+				{
+					
+					generatePlots(element->nodeLinks, element, targetNode, depth + 1);
+					tempPlot.pop_back();
+					if(depth==0)
+						targetNode = NULL;
+				}
+			}
+
+		}
+		
+		i++;
+
+	}
 
 
 }

@@ -80,11 +80,18 @@ int main()
 
     bool hasGeneratedNoise = false;
     bool showSelectedChunk = false;
+    bool isInChunkView = false;
 
     sf::RectangleShape chunkOutline(sf::Vector2f(chunkWidth, chunkHeight));
     chunkOutline.setFillColor(sf::Color::Transparent);
     chunkOutline.setOutlineColor(sf::Color::Transparent);
     chunkOutline.setOutlineThickness(10);
+
+    sf::View fullscreen(sf::Vector2f(750, 750), sf::Vector2f(1500, 1500));
+
+    sf::View chunkView;
+    
+
 
     sf::Texture noise;
     sf::Sprite sprite;
@@ -235,6 +242,21 @@ int main()
             {
                 chunkOutline.setOutlineColor(sf::Color::Transparent);
             }
+        }
+        if (ImGui::Checkbox("Zoom In", &isInChunkView))
+        {
+
+            if (isInChunkView == false)
+            {
+                window.setView(fullscreen);
+            }
+            else
+            {
+                chunkView.setCenter(sf::Vector2f(chunkOutline.getPosition().x+chunkHeight/2, chunkOutline.getPosition().y + chunkHeight / 2));
+                chunkView.setSize(chunkOutline.getSize());
+                window.setView(chunkView);
+            }
+
         }
         ImGui::Text("Street Generation parameters:");
 

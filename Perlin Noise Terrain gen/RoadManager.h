@@ -46,6 +46,8 @@ public:
 		newNode->nodeType = nodeInfo;
 		newNode->nodeID = AllNodes.size();
 
+		//cout << "Created new node: " + AllNodes.size();
+
 		IterationNodes.push_back(newNode);
 		targetNode->nodeLinks.push_back(newNode);
 		AllNodes.push_back(newNode);
@@ -57,6 +59,9 @@ public:
 	{
 		node1->nodeLinks.push_back(node2);
 		node2->nodeLinks.push_back(node1);
+		cout << "Connected nodes " << node1->nodeID << " TO " << node2->nodeID << '\n';
+		
+		
 	}
 
 	float distance(int x1, int y1, int x2, int y2)
@@ -67,7 +72,7 @@ public:
 
 	bool isIntersecting(sf::Vector2f point)
 	{
-		for (auto element : AllNodes)
+		for (auto &element : AllNodes)
 		{
 			if (element->parent != NULL)
 			{				
@@ -155,7 +160,13 @@ public:
 
 
 	NodeTree *RoadNetwork=new NodeTree;
-	std::vector<sf::Vector2f> plots;
+	vector<vector<Node*>>plots;
+	vector<Node*>tempPlot;
+	int plotIndex = 0;
+
+
+
+
 	
 	
 	
@@ -164,10 +175,12 @@ public:
 
 	void applyRules(int iterations);
 	bool checkRules(sf::Vector2f pos);
+	bool plotExsists(vector<Node*>plot);
+	bool isInTempPlot(Node* node);
 	void drawRoads();
 	void generatePlots(std::vector<Node*>AllNodes,Node* previousNode,Node* targetNode ,int depth);
 	int random(int low, int high);
-	bool isPositionPlotted(sf::Vector2f position)
+	/*bool isPositionPlotted(sf::Vector2f position)
 	{
 		for (int i = 0; i < plots.size(); i++)
 		{
@@ -178,7 +191,7 @@ public:
 		}
 
 		return false;
-	}
+	}*/
 
 
 private:
