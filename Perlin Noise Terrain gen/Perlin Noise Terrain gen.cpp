@@ -81,6 +81,8 @@ int main()
     bool hasGeneratedNoise = false;
     bool showSelectedChunk = false;
     bool isInChunkView = false;
+    bool viewPlots = false;
+    bool viewNodes = false;
 
     sf::RectangleShape chunkOutline(sf::Vector2f(chunkWidth, chunkHeight));
     chunkOutline.setFillColor(sf::Color::Transparent);
@@ -213,6 +215,8 @@ int main()
             if (hasGeneratedNoise == true)
             {
                 roads = new RoadManager(bestValueID, &window, &roadsType, pn);
+                roads->showNodes = viewNodes;
+                roads->showPlots = viewPlots;
                 roads->applyRules(rulesNumber);
             }
 
@@ -284,6 +288,37 @@ int main()
                 roadsType = 2;
             }
         }
+
+        if (ImGui::Checkbox("View Nodes", &viewNodes))
+        {
+
+            if (viewNodes == true)
+            {
+                roads->showNodes = true;
+            }
+            else
+            {
+                roads->showNodes = false;
+            }
+
+        }
+
+        if (ImGui::Checkbox("View Plots", &viewPlots))
+        {
+
+            if (viewPlots == true)
+            {
+                roads->showPlots = true;
+            }
+            else
+            {
+                roads->showPlots = false;
+            }
+
+        }
+
+     
+
        
         ImGui::End();
 

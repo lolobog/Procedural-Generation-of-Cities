@@ -10,6 +10,7 @@ RoadManager::RoadManager(int chunkID,sf::RenderWindow* window,int* roadsType, Pe
 	refWindow = window;
 	typeOfRoads = roadsType;
 	
+	
 }
 
 RoadManager::~RoadManager()
@@ -28,53 +29,109 @@ int RoadManager::random(int low, int high)
 }
 
 
-bool RoadManager::checkRules(sf::Vector2f pos)
+bool RoadManager::checkRules(sf::Vector2f pos, sf::Vector2f parent,bool applyRules)
 {
-	if (
-		isInChunkBounds(pos, currentChunk) && 
-		RoadNetwork->isIntersecting(pos) == false && 
-		isInUndesireableTerrain(pos) == false 
-		
-		)
-		return true;
-	else
-		return false;
-}
-
-
-void RoadManager::GenerateRoadChunk(Node* element, float plotGenerationChance, char dir, float length)
-{
-	sf::Vector2f pos;
-
-	if(dir == 'R' || dir == 'L') 
-		pos = sf::Vector2f(element->endPos.x + length, element->endPos.y );
-	else
-		pos = sf::Vector2f(element->endPos.x, element->endPos.y + length);
-
-
-	if (checkRules(pos))
+	if (applyRules == true)
 	{
-		if (RoadNetwork->isOverlappingNode(pos) == false)
+		if (*typeOfRoads == 1)
 		{
-			RoadNetwork->newLink(element, pos, dir);
+			if (
+				isInChunkBounds(pos, currentChunk) &&
+				isInUndesireableTerrain(pos) == false
+
+				)
+			{
+				cout << pos.x << " " << pos.y << " is  respecting the rules\n";
+				return true;
+			}
+			else
+			{
+				cout << pos.x << " " << pos.y << " is  NOT respecting the rules\n";
+				return false;
+			}
 		}
 		else
 		{
-			RoadNetwork->connectNodes(RoadNetwork->getNode(pos), element);
+			if (
+				isInChunkBounds(pos, currentChunk) &&
+				isInUndesireableTerrain(pos) == false 
+
+				)
+			{
+				cout << pos.x << " " << pos.y << " is  respecting the rules\n";
+				return true;
+			}
+			else
+			{
+				cout << pos.x << " " << pos.y << " is  NOT respecting the rules\n";
+				return false;
+			}
 		}
-		//if (random(1, 100) <= plotGenerationChance)
-		//{
-		//	pos = sf::Vector2f(element->endPos.x + roadLength / 2, element->endPos.y + roadLength / 2);
-		//	if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
-		//	{
-		//		plots.push_back(pos);
-		//	}
-		//	pos = sf::Vector2f(element->endPos.x - roadLength / 2, element->endPos.y + roadLength / 2);
-		//	if (isPositionPlotted(pos) == false && isInUndesireableTerrain(pos) == false)
-		//	{
-		//		plots.push_back(pos);
-		//	}
-		//}
+	}
+	else
+		return true;
+}
+
+
+void RoadManager::GenerateRoadChunk(Node* element, float plotGenerationChance, char dir, float length, bool applyRules)
+{
+	sf::Vector2f pos;
+
+	bool doNotGenerate = false;
+
+	if (*typeOfRoads == 1)
+	{
+		if (dir == 'R' || dir == 'L')
+			pos = sf::Vector2f(element->endPos.x + length, element->endPos.y);
+		else
+			pos = sf::Vector2f(element->endPos.x, element->endPos.y + length);
+	}
+	else
+	{
+		if (random(1, 2) == 1)
+		{
+			if (dir == 'R' || dir == 'L')
+				pos = sf::Vector2f(element->endPos.x + length, element->endPos.y + random(0, 10));
+			else
+				pos = sf::Vector2f(element->endPos.x + random(0, 10), element->endPos.y + length);
+		}
+		else
+		{
+			if (dir == 'R' || dir == 'L')
+			pos = sf::Vector2f(element->endPos.x + length, element->endPos.y);
+		else
+			pos = sf::Vector2f(element->endPos.x, element->endPos.y + length);
+		}
+
+		if (RoadNetwork->findNearbyNode(pos, 19)!=NULL)
+		{
+			sf::Vector2f tempNode = RoadNetwork->findNearbyNode(pos, 19)->endPos;
+			if (isInUndesireableTerrain(sf::Vector2f((tempNode.x + element->endPos.x) / 2, (tempNode.y + element->endPos.y) / 2)) == false)
+			{
+				pos = tempNode;
+			}
+			else
+				doNotGenerate = true;
+
+			
+			
+		}
+	}
+
+	if (doNotGenerate == false)
+	{
+		if (checkRules(pos, element->endPos, applyRules))
+		{
+			if (RoadNetwork->isOverlappingNode(pos) == false)
+			{
+				RoadNetwork->newLink(element, pos, dir);
+			}
+			else
+			{
+				RoadNetwork->connectNodes(RoadNetwork->getNode(pos), element);
+			}
+		
+		}
 	}
 }
 
@@ -109,45 +166,45 @@ void RoadManager::applyRules(int iterations)
 
 					case 'C':
 					{
-						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength);
-						GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength);
-						GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength);
-						GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength,false);
+						GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, false);
+						GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, false);
+						GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, false);
 
 						break;
 					}
 					case 'F':
 					{
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength,true);
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, true);
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, true);
 
 						break;
 					}
 					case 'R':
 					{
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength, true);
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, true);
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, true);
 
 						break;
 					}
 					case 'L':
 					{
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, true);
 
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, true);
 
 						if (random(1, 100) <= generationBias)
-						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength);
+						GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength, true);
 
 						break;
 					}
@@ -155,13 +212,13 @@ void RoadManager::applyRules(int iterations)
 					{
 
 						if (random(1, 100) <= generationBias)
-							GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength);
+							GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, true);
 
 						if (random(1, 100) <= generationBias)
-							GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength);
+							GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, true);
 
 						if (random(1, 100) <= generationBias)
-							GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength);
+							GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, true);
 
 						break;
 					}
@@ -178,7 +235,73 @@ void RoadManager::applyRules(int iterations)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					if (*typeOfRoads == 2)
 					{
-						
+						switch (element->nodeType)
+						{
+
+						case 'C':
+						{
+							GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength, false);
+							GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, false);
+							GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, false);
+							GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, false);
+
+							break;
+						}
+						case 'F':
+						{
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength, true);
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, true);
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, true);
+
+							break;
+						}
+						case 'R':
+						{
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength, true);
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, true);
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, true);
+
+							break;
+						}
+						case 'L':
+						{
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, true);
+
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, true);
+
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'F', roadLength, true);
+
+							break;
+						}
+						case 'B':
+						{
+
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'B', -roadLength, true);
+
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'R', roadLength, true);
+
+							if (random(1, 100) <= generationBias)
+								GenerateRoadChunk(element, plotGenerationChance, 'L', -roadLength, true);
+
+							break;
+						}
+
+
+
+						default:
+							break;
+						}
 					}
 			}
 			
@@ -205,10 +328,13 @@ void RoadManager::drawRoads()
 		{
 			for (auto element : RoadNetwork->AllNodes)
 			{
-				sf::CircleShape circle(4);
-				circle.setPosition(sf::Vector2f(element->endPos.x-circle.getRadius(), element->endPos.y - circle.getRadius()));
-				circle.setFillColor(sf::Color::Black);
-				refWindow->draw(circle);
+				if (showNodes == true)
+				{
+					sf::CircleShape circle(4);
+					circle.setPosition(sf::Vector2f(element->endPos.x - circle.getRadius(), element->endPos.y - circle.getRadius()));
+					circle.setFillColor(sf::Color::Black);
+					refWindow->draw(circle);
+				}
 				for (auto connection : element->nodeLinks)
 				{
 					if (usedNodes.size() >= 0)
@@ -220,7 +346,7 @@ void RoadManager::drawRoads()
 								sf::Vertex(element->endPos),
 								sf::Vertex(connection->endPos)
 							};
-							line->color = sf::Color(255, 255, 255, 10);
+							line->color = sf::Color(255, 255, 255, 255);
 							refWindow->draw(line, 2, sf::Lines);
 							numberOfRoads++;
 						}
@@ -249,23 +375,27 @@ void RoadManager::drawRoads()
 			}
 
 			generatePlots(RoadNetwork->AllNodes, NULL, NULL, 0);
-			for (auto plot : plots)
+
+			if (showPlots == true)
 			{
-				
-				sf::ConvexShape plotOutline;
-				plotOutline.setPointCount(plot.size()+1);
-
-				for (int i = 0; i < plot.size(); i++)
+				for (auto plot : plots)
 				{
-					plotOutline.setPoint(i, plot[i]->endPos);
-				}
-				plotOutline.setPoint(plot.size(), plot[0]->endPos);
-				plotOutline.setFillColor(sf::Color(255, 255, 255, 30));
-				plotOutline.setOutlineColor(sf::Color(255, 0, 0, 255));
-				plotOutline.setOutlineThickness(2);
 
-				refWindow->draw(plotOutline);
-				
+					sf::ConvexShape plotOutline;
+					plotOutline.setPointCount(plot.size() + 1);
+
+					for (int i = 0; i < plot.size(); i++)
+					{
+						plotOutline.setPoint(i, plot[i]->endPos);
+					}
+					plotOutline.setPoint(plot.size(), plot[0]->endPos);
+					plotOutline.setFillColor(sf::Color(255, 255, 255, 30));
+					plotOutline.setOutlineColor(sf::Color(255, 0, 0, 255));
+					plotOutline.setOutlineThickness(2);
+
+					refWindow->draw(plotOutline);
+
+				}
 			}
 			/*for (auto element : plots)
 			{

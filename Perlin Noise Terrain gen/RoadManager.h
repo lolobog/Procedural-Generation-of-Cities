@@ -70,12 +70,36 @@ public:
 		return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
 	}
 
-	bool isIntersecting(sf::Vector2f point)
+	float distancePoints(sf::Vector2f point1,sf::Vector2f point2)
 	{
+		int x1 = point1.x, y1 = point1.y, x2 = point2.x, y2 = point2.y;
+		// Calculating distance
+		return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
+	}
+
+	Node* findNearbyNode(sf::Vector2f pos,float radius)
+	{
+		for (auto element : AllNodes)
+		{
+			if (distancePoints(pos, element->endPos) <= radius)
+			{
+				return element;
+			}
+		}
+
+		return NULL;
+	}
+
+	
+
+	bool isOnLine(sf::Vector2f point)
+	{
+		bool status = false;
 		for (auto &element : AllNodes)
 		{
 			if (element->parent != NULL)
 			{				
+				
 				sf::Vector2f point1(element->parent->endPos.x, element->parent->endPos.y);
 				sf::Vector2f point2(element->endPos.x, element->endPos.y);
 
@@ -89,16 +113,16 @@ public:
 
 				if (cross != 0)
 				{
-					return false;
+					status= false;
 				}
 				else
 				{
 					if (abs(dxl) >= abs(dyl))
-						return dxl > 0 ?
+						status= dxl > 0 ?
 						point1.x <= point.x && point.x <= point2.x :
 						point2.x <= point.x && point.x <= point1.x;
 					else
-						return dyl > 0 ?
+						status= dyl > 0 ?
 						point1.y <= point.y && point.y <= point2.y :
 						point2.y <= point.y && point.y <= point1.y;
 				}
@@ -107,12 +131,156 @@ public:
 
 			
 			}
+
+			if (status == true)
+			{
+				return status;
+			}
 			
 
 		}
 
-		return false;
+		return status;
 	}
+
+
+	bool checkIfOnLine(sf::Vector2f point, sf::Vector2f p1, sf::Vector2f p2)
+	{
+		float dxc = point.x - p1.x;
+		float dyc = point.y - p1.y;
+
+		float dxl = p2.x - p1.x;
+		float dyl = p2.y - p1.y;
+
+		float cross = dxc * dyl - dyc * dxl;
+
+		if (cross != 0)
+		{
+			return false;
+		}
+		else
+		{
+			if (abs(dxl) >= abs(dyl))
+				return  dxl > 0 ?
+				p1.x <= point.x && point.x <= p2.x :
+				p2.x <= point.x && point.x <= p1.x;
+			else
+				return dyl > 0 ?
+				p1.y <= point.y && point.y <= p2.y :
+				p2.y <= point.y && point.y <= p1.y;
+		}
+
+
+		return false;
+
+
+	}
+
+	
+
+	bool isIntersecting(sf::Vector2f point,sf::Vector2f parent)
+	{
+		bool status = false;
+
+		for (auto& element : AllNodes)
+		{
+			for (auto link : element->nodeLinks)
+			{
+				if (checkIfOnLine(point, element->endPos, link->endPos)|| (element->parent!=NULL&&checkIfOnLine(point, element->endPos, element->parent->endPos)))
+				{
+					status = false;
+				}
+				else
+				{
+					{
+						status = checkIntersection(point, parent, element->endPos, link->endPos);
+						if (status == true)
+						{
+							cout << "Line formed from: " << point.x << ' ' << point.y << " AND " << parent.x << ' ' << parent.y << " is intersecting line formed from: " << element->endPos.x << ' ' << element->endPos.y << " AND " << link->endPos.x << ' ' << link->endPos.y << '\n';
+							return true;
+
+						}
+
+					}
+					if (element->parent != NULL)
+					{
+						status = checkIntersection(point, parent, element->endPos, element->parent->endPos);
+						if (status == true)
+						{
+							cout << "Line formed from: " << point.x << ' ' << point.y << " AND " << parent.x << ' ' << parent.y << " is intersecting line formed from: " << element->endPos.x << ' ' << element->endPos.y << " AND " << element->parent->endPos.x << ' ' << element->parent->endPos.y << '\n';
+							return true;
+
+						}
+					}
+				}
+			}
+		}
+
+		return status;
+
+		
+	}
+
+	bool checkIntersection(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f p3, sf::Vector2f p4)
+	{
+		double x1 = p1.x;
+		double y1 = p1.y;
+		double x2 = p2.x;
+		double y2 = p2.y;
+		double x3 = p3.x;
+		double y3 = p3.y;
+		double x4 = p4.x;
+		double y4 = p4.y;
+
+		double denominator = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
+		double numerator1 = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
+		double numerator2 = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
+
+		// Check if the lines are parallel
+		if (denominator == 0)
+		{
+			return false;
+		}
+
+		double r = numerator1 / denominator;
+		double s = numerator2 / denominator;
+
+		if (r < 0 || r > 1 || s < 0 || s > 1)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	//This function assumes that the lines are not paralel
+	sf::Vector2f getIntersection(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f p3, sf::Vector2f p4)
+	{
+		sf::Vector2f intersection;
+		// calculate the denominator
+		double den = ((p2.x - p1.x) * (p4.y - p3.y)) - ((p4.x - p3.x) * (p2.y - p1.y));
+
+		// calculate the numerator for the first line
+		double num1 = ((p4.x - p3.x) * (p1.y - p3.y)) - ((p4.y - p3.y) * (p1.x - p3.x));
+		// calculate the numerator for the second line
+		double num2 = ((p2.x - p1.x) * (p1.y - p3.y)) - ((p2.y - p1.y) * (p1.x - p3.x));
+
+		// calculate the parameters t1 and t2
+		double t1 = num1 / den;
+		double t2 = num2 / den;
+
+		// check if the intersection point is within both line segments
+		if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1)
+		{
+			// calculate and return the intersection point
+			intersection.x = p1.x + (t1 * (p2.x - p1.x));
+			intersection.y = p1.y + (t1 * (p2.y - p1.y));
+		}
+	}
+
+
+
+
 
 	bool isOverlappingNode(sf::Vector2f point)
 	{
@@ -164,17 +332,20 @@ public:
 	vector<Node*>tempPlot;
 	int plotIndex = 0;
 
+	bool showNodes = false;
+	bool showPlots = false;
 
 
 
+
 	
 	
 	
 	
-	void GenerateRoadChunk(Node* element, float plotGenerationChance, char dir, float length);
+	void GenerateRoadChunk(Node* element, float plotGenerationChance, char dir, float length,bool applyRules);
 
 	void applyRules(int iterations);
-	bool checkRules(sf::Vector2f pos);
+	bool checkRules(sf::Vector2f pos,sf::Vector2f parent, bool applyRules);
 	bool plotExsists(vector<Node*>plot);
 	bool isInTempPlot(Node* node);
 	void drawRoads();
