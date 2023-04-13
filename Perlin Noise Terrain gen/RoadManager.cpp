@@ -18,7 +18,7 @@ RoadManager::~RoadManager()
 }
 
 
-int RoadManager::random(int low, int high)
+int random(int low, int high)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -106,15 +106,12 @@ void RoadManager::GenerateRoadChunk(Node* element, float plotGenerationChance, c
 		if (RoadNetwork->findNearbyNode(pos, 19)!=NULL)
 		{
 			sf::Vector2f tempNode = RoadNetwork->findNearbyNode(pos, 19)->endPos;
-			if (isInUndesireableTerrain(sf::Vector2f((tempNode.x + element->endPos.x) / 2, (tempNode.y + element->endPos.y) / 2)) == false)
+			if (isInUndesireableTerrain(sf::Vector2f((tempNode.x + element->endPos.x) / 2, (tempNode.y + element->endPos.y) / 2)) == false&&RoadNetwork->isIntersecting(pos,element->endPos)==false)
 			{
 				pos = tempNode;
 			}
 			else
 				doNotGenerate = true;
-
-			
-			
 		}
 	}
 
@@ -231,7 +228,7 @@ void RoadManager::applyRules(int iterations)
 				}
 				else
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////// STRAIGHT ROADS /////////////////////////////////////////////////////////////////
+///////////////////////////////////// NOT STRAIGHT ROADS /////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					if (*typeOfRoads == 2)
 					{
@@ -313,6 +310,8 @@ void RoadManager::applyRules(int iterations)
 		RoadNetwork->IterationNodes.clear();
 		iterations--;
 	}
+
+	generatePlots(RoadNetwork->AllNodes, NULL, NULL, 0);
 }
 
 
@@ -374,7 +373,7 @@ void RoadManager::drawRoads()
 
 			}
 
-			generatePlots(RoadNetwork->AllNodes, NULL, NULL, 0);
+			
 
 			if (showPlots == true)
 			{
@@ -452,6 +451,32 @@ bool RoadManager::isInTempPlot(Node* node)
 	return false;
 }
 
+bool RoadManager::isSubPlot(vector<Node*> plot, vector<vector<Node*>> plots)
+{
+	
+		for (auto& element : plots)
+		{
+			int sharedNodes = 0;
+			for (auto& node : element)
+			{
+				for (auto& plotNode : plot)
+				{
+					if (node == plotNode)
+					{
+						sharedNodes++;
+					}
+				}
+			}
+			if (sharedNodes >=3)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	
+}
+
 void RoadManager::generatePlots(std::vector<Node*>AllNodes, Node* previousNode, Node* targetNode, int depth)
 {
 	int i = 0;
@@ -472,7 +497,7 @@ void RoadManager::generatePlots(std::vector<Node*>AllNodes, Node* previousNode, 
 					if (element->parent == targetNode)
 					{
 						nodeFound = true;
-						if (plotExsists(tempPlot) == false)
+						if (plotExsists(tempPlot) == false&&isSubPlot(tempPlot,plots)==false)
 						{
 							plots.push_back(tempPlot);
 						}

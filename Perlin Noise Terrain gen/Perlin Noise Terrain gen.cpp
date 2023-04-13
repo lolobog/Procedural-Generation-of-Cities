@@ -1,4 +1,4 @@
-#include "RoadManager.h"
+#include "BuildingsManager.h"
 #include "imgui.h"
 #include "imgui-SFML.h"
 
@@ -65,6 +65,7 @@ int main()
     int seed = 86;
     PerlinNoise2D* pn= new PerlinNoise2D(&seed); //good ones: 86
     MapManager mapM(pn);
+
    
     sf::Image img;
     img.create(imgWidth, imgHeight);
@@ -102,6 +103,7 @@ int main()
    
     RoadManager* roads=NULL;
 
+    City* city = NULL;
 
     sf::Clock deltaClock;
   
@@ -218,8 +220,15 @@ int main()
                 roads->showNodes = viewNodes;
                 roads->showPlots = viewPlots;
                 roads->applyRules(rulesNumber);
+                city = new City(roads);
+                city->extractPlotLimits();
+                city->findPlotCenters();
+                city->create();
+
+           
             }
 
+           
            
         }
         ImGui::Text("Noise Generation parameters:");
@@ -271,7 +280,7 @@ int main()
                 rulesNumber = 1;
             }
 
-            if (rulesNumber > 5)
+            if (rulesNumber > 8)
             {
                 rulesNumber = 5;
             }
@@ -303,21 +312,25 @@ int main()
 
         }
 
+        
+
         if (ImGui::Checkbox("View Plots", &viewPlots))
         {
-
-            if (viewPlots == true)
+            if (roads != NULL)
             {
-                roads->showPlots = true;
-            }
-            else
-            {
-                roads->showPlots = false;
+                if (viewPlots == true)
+                {
+                    roads->showPlots = true;
+                }
+                else
+                {
+                    roads->showPlots = false;
+                }
             }
 
         }
 
-     
+       
 
        
         ImGui::End();
@@ -333,6 +346,8 @@ int main()
         ImGui::SFML::Render(window);
 
         roads->drawRoads();
+        city->drawCenters();
+        city->display();
        
 
         window.display();
