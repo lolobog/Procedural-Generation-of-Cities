@@ -118,7 +118,8 @@ void Building::construct()
 		}
 		building.setPoint(buildingParts[j]->shapePoints.size(), buildingParts[j]->shapePoints[0]);
 		building.setFillColor(sf::Color(255, 255, 255, 255));
-		building.setOutlineColor(sf::Color(255, 0, 0, 255));
+		building.setOutlineColor(sf::Color::Black);
+		building.setOutlineThickness(1);
 	
 		forDrawing.push_back(building);
 	}
@@ -184,7 +185,7 @@ void Building::iterate(int numberOfIterations)
 void Building::shrink(BuildingNode* node, vector<BuildingNode*> &newNodes)
 {
 	sf::Vector2f newPos;
-	int newWallsSize = wallSize / 2;
+	int newWallsSize = wallSize ;
 	if (node->position.x < node->predecessor->position.x)
 	{
 		newPos.x += newWallsSize;
@@ -203,7 +204,7 @@ void Building::shrink(BuildingNode* node, vector<BuildingNode*> &newNodes)
 		newPos.y -= newWallsSize;
 	}
 	if (random(1, 2) == 1)
-		newNodes.push_back(new BuildingNode(node, 'C', 'A', newWallsSize));
+		newNodes.push_back(new BuildingNode(node, 'C', 'B', newWallsSize));
 	else
 		newNodes.push_back(new BuildingNode(node, 'C', 'B', newWallsSize));
 }

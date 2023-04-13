@@ -105,14 +105,14 @@ class Building
 {
 	string axiom;
 	vector<BuildingNode*>buildingParts;
-	int wallSize = random(5,10);
+	int wallSize = 3;
 public:
 	Building(sf::Vector2f center, vector<sf::Vector2f> limits)
 	{
 		buildingParts.push_back(new BuildingNode(center, 'C', wallSize));
 		divide(buildingParts[0], buildingParts);
 		buildingParts.erase(buildingParts.begin());
-		iterate(3);
+		iterate(4);
 		construct();
 	}
 	
