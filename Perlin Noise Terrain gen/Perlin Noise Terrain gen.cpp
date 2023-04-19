@@ -69,21 +69,38 @@ int main()
    
     sf::Image img;
     img.create(imgWidth, imgHeight);
+    ////////////////////////
+    //Generation variables//
+    ////////////////////////
 
     //Noise values
     int octaves = 8;
     int blendLvl = 8;
     int bestValueID=0;
+    bool hasGeneratedNoise = false;
+    bool showSelectedChunk = false;
 
     //Street Network values
     int rulesNumber=5 ;
     int roadsType = 1;
-
-    bool hasGeneratedNoise = false;
-    bool showSelectedChunk = false;
-    bool isInChunkView = false;
     bool viewPlots = false;
     bool viewNodes = false;
+
+    //Buildings values
+    int grammarIterations = 4;
+
+    /////////////////////
+    //Editing variables//
+    /////////////////////
+
+    //Noise levels
+    bool enableNoiseEdit = false;
+    string noiseEditName = "Edit noise levels";
+
+   
+    bool isInChunkView = false;
+
+
 
     sf::RectangleShape chunkOutline(sf::Vector2f(chunkWidth, chunkHeight));
     chunkOutline.setFillColor(sf::Color::Transparent);
@@ -170,10 +187,16 @@ int main()
       
         ImGui::SFML::Update(window, deltaClock.restart());
 
-        ImGui::Begin("Window");
-        ImGui::Text("Generate noise and streets:");
+        ImGui::Begin("Generation Window");
+        ImGui::Text("Generate:");
         if (ImGui::Button("Generate ALL"))
         {
+            if (pn != NULL)
+            {
+                delete pn;
+                pn = NULL;
+            }
+            pn = new PerlinNoise2D(&seed);
             GenerateAndDisplayNoise(img, pn, mapM, octaves, blendLvl, chunkOutline, noise, sprite, bestValueID);
             if (roads != NULL)
             {
@@ -185,16 +208,37 @@ int main()
 
             roads = new RoadManager(bestValueID, &window, &roadsType, pn);
             roads->applyRules(rulesNumber);
+
+            if (city != NULL)
+            {
+                delete city;
+                city = NULL;
+            }
+            city = new City(roads, grammarIterations);
+            city->extractPlotLimits();
+            city->findPlotCenters();
+            city->create();
            
           
         }
-        ImGui::SameLine();
+       // ImGui::SameLine();
         if (ImGui::Button("Generate Noise"))
         {
             if (pn != NULL)
             {
                 delete pn;
                 pn = NULL;
+            }
+
+            if (roads != NULL)
+            {
+                delete roads;
+                roads = NULL;
+            }
+            if (city != NULL)
+            {
+                delete city;
+                city = NULL;
             }
 
             pn = new PerlinNoise2D(&seed);
@@ -205,14 +249,18 @@ int main()
 
          
         }
-        ImGui::SameLine();
+        //ImGui::SameLine();
         if (ImGui::Button("Generate Streets"))
         {
             if (roads != NULL)
             {
                 delete roads;
-                roads = NULL;
-                
+                roads = NULL;               
+            }
+            if (city != NULL)
+            {
+                delete city;
+                city = NULL;
             }
             if (hasGeneratedNoise == true)
             {
@@ -220,16 +268,25 @@ int main()
                 roads->showNodes = viewNodes;
                 roads->showPlots = viewPlots;
                 roads->applyRules(rulesNumber);
-                city = new City(roads);
-                city->extractPlotLimits();
-                city->findPlotCenters();
-                city->create();
+
 
            
             }
 
            
            
+        }
+        if (ImGui::Button("Generate Buildings"))
+        {
+            if (city != NULL)
+            {
+                delete city;
+                city = NULL;
+            }
+            city = new City(roads, grammarIterations);
+            city->extractPlotLimits();
+            city->findPlotCenters();
+            city->create();
         }
         ImGui::Text("Noise Generation parameters:");
         ImGui::InputInt("Noise seed", &seed);
@@ -286,7 +343,7 @@ int main()
             }
         }
 
-        if (ImGui::InputInt("Roads Type: 1.Grid Style; 2.Spider web", &roadsType))
+        if (ImGui::InputInt("Roads Type: 1.Grid Style; 2.Mixed", &roadsType))
         {
             if (roadsType < 1)
             {
@@ -330,9 +387,61 @@ int main()
 
         }
 
-       
+        ImGui::Text("Building Generation parameters:");
 
        
+
+        if (ImGui::InputInt("Complexity", &grammarIterations))
+        {
+            if (grammarIterations < 1)
+            {
+                grammarIterations = 1;
+            }
+
+            if (grammarIterations > 4)
+            {
+                grammarIterations = 4;
+            }
+        }
+
+  
+
+       
+        ImGui::End();
+
+      
+
+
+
+        ImGui::Begin("Editing Window");
+
+
+        ImGui::Text("Edit noise");
+        if (ImGui::Button(noiseEditName.c_str()))
+        {
+            if (enableNoiseEdit == true)
+            {
+                enableNoiseEdit = false;
+                noiseEditName = "Edit noise levels";
+            }
+            else
+            {
+                enableNoiseEdit = true;
+                noiseEditName = "Exit editing";
+               
+            }
+        }
+
+
+        ImGui::Text("Edit street network");
+
+
+
+        ImGui::Text("Edit Buildings");
+
+
+
+
         ImGui::End();
 
         ImGui::ShowDemoWindow();
@@ -344,10 +453,17 @@ int main()
         window.draw(sprite);
         window.draw(chunkOutline);
         ImGui::SFML::Render(window);
-
+       
         roads->drawRoads();
         city->drawCenters();
         city->display();
+        if (enableNoiseEdit == true)
+        {
+            sf::RectangleShape rect(sf::Vector2f(imgWidth, imgHeight));
+            sf::RectangleShape brush();
+            rect.setFillColor(sf::Color(255, 255, 255, 20));
+            window.draw(rect);
+        }
        
 
         window.display();

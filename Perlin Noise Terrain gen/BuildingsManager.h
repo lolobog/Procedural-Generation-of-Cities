@@ -2,20 +2,6 @@
 #include "RoadManager.h"
 
 sf::Vector2f findCenter(vector<sf::Vector2f> points);
-class Roof
-{
-
-};
-
-class Wall
-{
-
-};
-
-class Floor
-{
-
-};
 
 class BuildingNode
 {
@@ -107,12 +93,12 @@ class Building
 	vector<BuildingNode*>buildingParts;
 	int wallSize = 3;
 public:
-	Building(sf::Vector2f center, vector<sf::Vector2f> limits)
+	Building(sf::Vector2f center, vector<sf::Vector2f> limits,int iterations)
 	{
 		buildingParts.push_back(new BuildingNode(center, 'C', wallSize));
 		divide(buildingParts[0], buildingParts);
 		buildingParts.erase(buildingParts.begin());
-		iterate(4);
+		iterate(iterations);
 		construct();
 	}
 	
@@ -137,7 +123,7 @@ class City
 {
 public:
 
-	City(RoadManager* roadM);
+	City(RoadManager* roadM,int iterations);
 	
 	
 	~City();
@@ -151,6 +137,7 @@ public:
 
 
 private:
+	int numberOfIterations;
 	RoadManager* roadManager;
 	vector<Building*> buildings;
 	vector<vector<sf::Vector2f>> plotLimits;

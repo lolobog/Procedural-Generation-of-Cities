@@ -1,9 +1,9 @@
 #include "BuildingsManager.h"
 
-City::City(RoadManager* roadM)
+City::City(RoadManager* roadM, int iterations)
 {
 	roadManager = roadM;
-	
+	numberOfIterations = iterations;
 }
 
 City::~City()
@@ -61,7 +61,7 @@ void City::create()
 {
 	for (int i=0;i< plotCenters.size();i++)
 	{
-		buildings.push_back(new Building(plotCenters[i], plotLimits[i]));
+		buildings.push_back(new Building(plotCenters[i], plotLimits[i],numberOfIterations));
 	}
 }
 
@@ -118,7 +118,7 @@ void Building::construct()
 		}
 		building.setPoint(buildingParts[j]->shapePoints.size(), buildingParts[j]->shapePoints[0]);
 		building.setFillColor(sf::Color(255, 255, 255, 255));
-		building.setOutlineColor(sf::Color::Black);
+		//building.setOutlineColor(sf::Color::Black);
 		building.setOutlineThickness(1);
 	
 		forDrawing.push_back(building);
