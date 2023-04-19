@@ -123,8 +123,17 @@ int main()
     City* city = NULL;
 
     sf::Clock deltaClock;
-  
 
+    sf::RectangleShape rect(sf::Vector2f(imgWidth, imgHeight));
+    sf::RectangleShape brush(sf::Vector2f(5,5));
+    rect.setFillColor(sf::Color(255, 255, 255, 60));
+
+    vector<sf::RectangleShape> editorDrawables;
+    editorDrawables.push_back(rect);
+    editorDrawables.push_back(brush);
+  
+    sf::Mouse mouseRef;
+    
     
    
   
@@ -137,6 +146,73 @@ int main()
         while (window.pollEvent(event))
         {
            ImGui::SFML::ProcessEvent(window,event);
+
+
+           if (enableNoiseEdit == true)
+           {
+               if (event.type == sf::Event::MouseButtonPressed)
+               {
+                   if (pn != NULL)
+                   {
+                       if (event.mouseButton.button == sf::Mouse::Left)
+                       {
+                           cout << "Left clicked\n";
+                           if (pn->noiseValues.size() > sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y)
+                           {
+                               if (pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] + 10 < 256)
+                               {
+                                   cout << "Trying to draw at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y<<" "<<"vector ID: "<< sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y<<" new value: "<< pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y]<<'\n';
+                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] += 10;
+                                   pn->noiseValues[(sf::Mouse::getPosition(window).x+1) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
+                                   pn->noiseValues[(sf::Mouse::getPosition(window).x - 1) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
+                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y+1] += 10;
+                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y-1] += 10;
+                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y+2] += 10;
+                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y-2] += 10;
+                                   pn->noiseValues[(sf::Mouse::getPosition(window).x+2) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
+                                   pn->noiseValues[(sf::Mouse::getPosition(window).x-2) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
+
+                                   cout << "Drew at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y << " " << "vector ID: " << sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y << " new value: " << pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] << '\n';
+
+
+
+                                   mapM.colorImg(img, pn->noiseValues);
+
+
+                                   noise.loadFromImage(img);
+
+
+                                   sprite.setTexture(noise);
+                               }
+                           }
+                       }
+                       else
+                           if (event.mouseButton.button == sf::Mouse::Right)
+                           {
+                               cout << "Right clicked\n";
+                               if (pn->noiseValues.size() > sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y)//Check if you are clicking on the noise texture
+                               {
+                                   if (pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] - 10 > 0)
+                                   {
+                                       pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] -= 10;
+
+
+
+
+                                       mapM.colorImg(img, pn->noiseValues);
+
+
+                                       noise.loadFromImage(img);
+
+
+                                       sprite.setTexture(noise);
+                                   }
+                               }
+                           }
+                   }
+               }
+           }
+
 
             if (event.type == sf::Event::KeyPressed)
             {
@@ -158,6 +234,7 @@ int main()
 
                      
                 }
+
 
                 
 
@@ -426,6 +503,16 @@ int main()
             }
             else
             {
+                if (roads != NULL)
+                {
+                    delete roads;
+                    roads = NULL;
+                }
+                if (city != NULL)
+                {
+                    delete city;
+                    city = NULL;
+                }
                 enableNoiseEdit = true;
                 noiseEditName = "Exit editing";
                
@@ -452,20 +539,21 @@ int main()
 
         window.draw(sprite);
         window.draw(chunkOutline);
-        ImGui::SFML::Render(window);
+       
        
         roads->drawRoads();
         city->drawCenters();
         city->display();
         if (enableNoiseEdit == true)
         {
-            sf::RectangleShape rect(sf::Vector2f(imgWidth, imgHeight));
-            sf::RectangleShape brush();
-            rect.setFillColor(sf::Color(255, 255, 255, 20));
-            window.draw(rect);
+            for (auto element : editorDrawables)
+            {
+                window.draw(element);
+            }
+           // window.draw(rect);
         }
        
-
+        ImGui::SFML::Render(window);
         window.display();
        // sf::sleep(sf::milliseconds(10));
     }

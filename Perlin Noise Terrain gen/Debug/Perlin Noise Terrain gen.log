@@ -1,35 +1,61 @@
-﻿  Perlin Noise Terrain gen.cpp
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\LSystem.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Variables.h(6,28): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Variables.h(7,29): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\RoadManager.h(70,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\RoadManager.h(75,10): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+﻿  RoadManager.cpp
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\LSystem.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Variables.h(6,28): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\Variables.h(7,29): warning C4228: nonstandard extension used: qualifiers after comma in declarator list are ignored
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.h(70,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.h(75,10): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\RoadManager.h(75,25): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.h(75,25): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\RoadManager.h(75,40): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.h(75,40): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\RoadManager.h(75,55): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.h(75,55): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\RoadManager.h(77,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(9,19): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(14,23): warning C4018: '<': signed/unsigned mismatch
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(16,52): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
-          with
-          [
-              _Ty=double
-          ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(60,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Perlin Noise Terrain gen.vcxproj -> D:\Procedural-Generation-of-Cities\Debug\Perlin Noise Terrain gen.exe
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.h(77,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(168,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(169,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(170,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(171,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(178,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(180,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(182,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(189,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(191,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(193,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(200,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(203,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(206,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(214,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(217,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(220,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(242,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(243,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(244,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(245,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(252,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(254,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(256,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(263,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(265,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(267,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(274,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(277,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(280,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(288,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(291,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(294,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(388,24): warning C4018: '<': signed/unsigned mismatch
+D:\S210641\Projects\Perlin Noise Terrain gen\Perlin Noise Terrain gen\RoadManager.cpp(485,11): warning C4018: '<': signed/unsigned mismatch
+  Perlin Noise Terrain gen.vcxproj -> D:\S210641\Projects\Perlin Noise Terrain gen\Debug\Perlin Noise Terrain gen.exe

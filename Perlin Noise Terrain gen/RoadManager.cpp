@@ -103,10 +103,12 @@ void RoadManager::GenerateRoadChunk(Node* element, float plotGenerationChance, c
 			pos = sf::Vector2f(element->endPos.x, element->endPos.y + length);
 		}
 
-		if (RoadNetwork->findNearbyNode(pos, 19)!=NULL)
+		auto nearbyNode = RoadNetwork->findNearbyNode(pos, 19);
+
+		if (nearbyNode != nullptr)
 		{
-			sf::Vector2f tempNode = RoadNetwork->findNearbyNode(pos, 19)->endPos;
-			if (isInUndesireableTerrain(sf::Vector2f((tempNode.x + element->endPos.x) / 2, (tempNode.y + element->endPos.y) / 2)) == false&&RoadNetwork->isIntersecting(pos,element->endPos)==false)
+			sf::Vector2f tempNode = nearbyNode->endPos;
+			if (isInUndesireableTerrain(sf::Vector2f((tempNode.x + element->endPos.x) / 2, (tempNode.y + element->endPos.y) / 2)) == false && RoadNetwork->isIntersecting(pos,element->endPos)==false)
 			{
 				pos = tempNode;
 			}
@@ -331,7 +333,7 @@ void RoadManager::drawRoads()
 				{
 					sf::CircleShape circle(4);
 					circle.setPosition(sf::Vector2f(element->endPos.x - circle.getRadius(), element->endPos.y - circle.getRadius()));
-					circle.setFillColor(sf::Color::Black);
+					circle.setFillColor(sf::Color(0, 0, 0, 64));
 					refWindow->draw(circle);
 				}
 				for (auto connection : element->nodeLinks)
