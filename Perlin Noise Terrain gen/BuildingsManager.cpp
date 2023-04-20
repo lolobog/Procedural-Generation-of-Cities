@@ -134,12 +134,13 @@ void Building::applyRules()
 		{
 		case 'A': //Room
 		{
-			if (random(1, 3) == 1)
+			int chance = random(1, 6);
+			if (chance %2==0)
 			{
 				divide(element,tempParts);
 			}
 			else
-				if (random(1, 3) == 2)
+				if (chance == 1)
 				{
 					shrink(element,tempParts);
 				}
@@ -185,28 +186,36 @@ void Building::iterate(int numberOfIterations)
 void Building::shrink(BuildingNode* node, vector<BuildingNode*> &newNodes)
 {
 	sf::Vector2f newPos;
-	int newWallsSize = wallSize ;
-	if (node->position.x < node->predecessor->position.x)
+	
+	int newWallsSize = node->wallSize ;
+	if (node->predecessor != NULL)
 	{
-		newPos.x += newWallsSize;
-	}
-	else
-	{
-		newPos.x -= newWallsSize;
-	}
+		if (node->position.x < node->predecessor->position.x)
+		{
+			newPos.x += newWallsSize;
+		}
+		else
+		{
+			newPos.x -= newWallsSize;
+		}
 
-	if (node->position.y < node->position.y)
-	{
-		newPos.y += newWallsSize;
+		if (node->position.y < node->position.y)
+		{
+			newPos.y += newWallsSize;
+		}
+		else
+		{
+			newPos.y -= newWallsSize;
+		}
 	}
 	else
 	{
-		newPos.y -= newWallsSize;
+		newPos = node->position;
 	}
 	if (random(1, 2) == 1)
-		newNodes.push_back(new BuildingNode(node, 'C', 'B', newWallsSize));
+		newNodes.push_back(new BuildingNode(node, newPos, 'C', 'A', newWallsSize));
 	else
-		newNodes.push_back(new BuildingNode(node, 'C', 'B', newWallsSize));
+		newNodes.push_back(new BuildingNode(node, newPos, 'C', 'B', newWallsSize));
 }
 
 void Building::divide(BuildingNode* node, vector<BuildingNode*> &newNodes)

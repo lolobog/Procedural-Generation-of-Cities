@@ -434,14 +434,16 @@ int main()
 
         if (ImGui::Checkbox("View Nodes", &viewNodes))
         {
-
-            if (viewNodes == true)
+            if (roads != NULL)
             {
-                roads->showNodes = true;
-            }
-            else
-            {
-                roads->showNodes = false;
+                if (viewNodes == true)
+                {
+                    roads->showNodes = true;
+                }
+                else
+                {
+                    roads->showNodes = false;
+                }
             }
 
         }

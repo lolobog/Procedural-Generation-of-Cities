@@ -243,6 +243,12 @@ public:
 
 	sf::RenderWindow* refWindow;
 private:
+	vector<vector<Node*>>allPlots;
+	vector<Node*> chosenPlot;
+	int chosenPlotSize = 0;
+
+
+
 	int* typeOfRoads;
 	int roadLength = 20;
 	int currentChunk;

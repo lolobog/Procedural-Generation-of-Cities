@@ -88,6 +88,7 @@ void RoadManager::GenerateRoadChunk(Node* element, float plotGenerationChance, c
 	}
 	else
 	{
+
 		if (random(1, 2) == 1)
 		{
 			if (dir == 'R' || dir == 'L')
@@ -311,9 +312,10 @@ void RoadManager::applyRules(int iterations)
 		RoadNetwork->CurrentNodes = RoadNetwork->IterationNodes;
 		RoadNetwork->IterationNodes.clear();
 		iterations--;
+		generatePlots(RoadNetwork->AllNodes, NULL, NULL, 0);
 	}
 
-	generatePlots(RoadNetwork->AllNodes, NULL, NULL, 0);
+	
 }
 
 
@@ -485,7 +487,7 @@ void RoadManager::generatePlots(std::vector<Node*>AllNodes, Node* previousNode, 
 	while (i < AllNodes.size())
 	{
 		Node* element = AllNodes[i];
-
+	
 		
 		if (isInTempPlot(element) == false||(element==targetNode&&tempPlot.size()>2 && element != tempPlot[tempPlot.size() - 3]))
 		{
@@ -508,16 +510,19 @@ void RoadManager::generatePlots(std::vector<Node*>AllNodes, Node* previousNode, 
 
 					}
 
-
-					if (element == targetNode )
+					for (auto subELement : element->nodeLinks)
 					{
-						nodeFound = true;
-						if (plotExsists(tempPlot) == false)
+						if (subELement == targetNode)
 						{
-							plots.push_back(tempPlot);
+							nodeFound = true;
+							if (plotExsists(tempPlot) == false)
+							{
+								plots.push_back(tempPlot);
+							}
+							tempPlot.pop_back();
+							break;
+
 						}
-						tempPlot.pop_back();
-					
 					}
 				}
 
@@ -531,15 +536,40 @@ void RoadManager::generatePlots(std::vector<Node*>AllNodes, Node* previousNode, 
 
 				if (nodeFound == false)
 				{
-					
-					generatePlots(element->nodeLinks, element, targetNode, depth + 1);
-					tempPlot.pop_back();
-					if(depth==0)
+					if (element!=NULL)
+					{
+						generatePlots(element->nodeLinks, element, targetNode, depth + 1);
+						
+					}
+					if (tempPlot.size() > 0)
+					{
+						tempPlot.pop_back();
+					}
+					if (depth == 0)
 						targetNode = NULL;
 				}
 			}
 
 		}
+
+		//if (depth == 0)
+	/*	{
+			for (auto plot : allPlots)
+			{
+				if (plot.size() < chosenPlotSize || chosenPlotSize == 0)
+				{
+					chosenPlotSize = plot.size();
+					chosenPlot = plot;
+				}
+			}
+			if (chosenPlot.size() > 0)
+			{
+				plots.push_back(chosenPlot);
+				allPlots.clear();
+				chosenPlot.clear();
+				chosenPlotSize = 0;
+			}
+		}*/
 		
 		i++;
 
