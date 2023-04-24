@@ -18,6 +18,23 @@ std::vector<double> mapVector(std::vector<double> noiseLevels,float start1, floa
     return mappedValues;
 }
 
+void DiscoverBestChunk(MapManager& mapM,vector<double>&noiseLevels, int& bestValueID, sf::RectangleShape& chunkOutline)
+{
+    std::vector<double>chunkAvHeight = mapM.calcChunkAvHeight(noiseLevels);//Calculate the average height of every chunk
+
+
+    bestValueID = mapM.getBestChunkID(chunkAvHeight);
+
+
+    std::cout << "Size of the array of chunks: " << chunkAvHeight.size() << '\n';
+    std::cout << "ID of the best chunks: " << bestValueID << '\n';
+    std::cout << "Chuck start point X: " << mapM.findChunkX(bestValueID) << " Y: " << mapM.findChunkY(bestValueID) << '\n';
+
+
+
+    chunkOutline.setPosition(mapM.findChunkStartP(bestValueID));
+}
+
 void GenerateAndDisplayNoise(sf::Image img,PerlinNoise2D* pn,MapManager &mapM,int octaves,int blendLvl, sf::RectangleShape &chunkOutline,sf::Texture &noise,sf::Sprite &sprite,int &bestValueID)
 {
     std::vector<double> noiseLevels = pn->generateNoise(*pn, octaves, noiseLevels); //Generate the perlin noise
@@ -36,19 +53,7 @@ void GenerateAndDisplayNoise(sf::Image img,PerlinNoise2D* pn,MapManager &mapM,in
 
 
 
-    std::vector<double>chunkAvHeight = mapM.calcChunkAvHeight(noiseLevels);//Calculate the average height of every chunk
-
-
-    bestValueID = mapM.getBestChunkID(chunkAvHeight);
-
-
-    std::cout << "Size of the array of chunks: " << chunkAvHeight.size() << '\n';
-    std::cout << "ID of the best chunks: " << bestValueID << '\n';
-    std::cout << "Chuck start point X: " << mapM.findChunkX(bestValueID) << " Y: " << mapM.findChunkY(bestValueID) << '\n';
-
-    
-
-    chunkOutline.setPosition(mapM.findChunkStartP(bestValueID));
+    DiscoverBestChunk(mapM, noiseLevels, bestValueID, chunkOutline);
 
     
 }
@@ -89,13 +94,7 @@ int main()
     //Buildings values
     int grammarIterations = 4;
 
-    /////////////////////
-    //Editing variables//
-    /////////////////////
-
-    //Noise levels
-    bool enableNoiseEdit = false;
-    string noiseEditName = "Edit noise levels";
+  
 
    
     bool isInChunkView = false;
@@ -124,6 +123,17 @@ int main()
 
     sf::Clock deltaClock;
 
+
+
+
+    /////////////////////
+    //Editing variables//
+    /////////////////////
+
+    //Noise levels
+    bool enableNoiseEdit = false;
+    string noiseEditName = "Edit noise levels";
+
     sf::RectangleShape rect(sf::Vector2f(imgWidth, imgHeight));
     sf::RectangleShape brush(sf::Vector2f(5,5));
     rect.setFillColor(sf::Color(255, 255, 255, 60));
@@ -131,17 +141,28 @@ int main()
     vector<sf::RectangleShape> editorDrawables;
     editorDrawables.push_back(rect);
     editorDrawables.push_back(brush);
-  
+    brush.setSize(sf::Vector2f(10, 10));
     sf::Mouse mouseRef;
-    
-    
-   
+    bool mouseLeftPress = false;
+    bool mouseRightPress = false;
+    int brushSize = 0;
+
+
+    //Streets Editing
+    bool enableStreetsEdit = false;
+    string streetEditName = "Edit streets";
+    Node* node1=NULL;
+    Node* node2=NULL;
   
 
    
     while (window.isOpen())
     {
-        
+       
+        editorDrawables[1].setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+        editorDrawables[1].setSize(sf::Vector2f(brushSize + 1, brushSize + 1));
+
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -150,66 +171,111 @@ int main()
 
            if (enableNoiseEdit == true)
            {
+               
+
+
                if (event.type == sf::Event::MouseButtonPressed)
                {
                    if (pn != NULL)
                    {
                        if (event.mouseButton.button == sf::Mouse::Left)
                        {
-                           cout << "Left clicked\n";
-                           if (pn->noiseValues.size() > sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y)
-                           {
-                               if (pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] + 10 < 256)
-                               {
-                                   cout << "Trying to draw at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y<<" "<<"vector ID: "<< sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y<<" new value: "<< pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y]<<'\n';
-                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] += 10;
-                                   pn->noiseValues[(sf::Mouse::getPosition(window).x+1) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
-                                   pn->noiseValues[(sf::Mouse::getPosition(window).x - 1) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
-                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y+1] += 10;
-                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y-1] += 10;
-                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y+2] += 10;
-                                   pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y-2] += 10;
-                                   pn->noiseValues[(sf::Mouse::getPosition(window).x+2) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
-                                   pn->noiseValues[(sf::Mouse::getPosition(window).x-2) * imgWidth + sf::Mouse::getPosition(window).y] += 10;
-
-                                   cout << "Drew at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y << " " << "vector ID: " << sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y << " new value: " << pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] << '\n';
-
-
-
-                                   mapM.colorImg(img, pn->noiseValues);
-
-
-                                   noise.loadFromImage(img);
-
-
-                                   sprite.setTexture(noise);
-                               }
-                           }
+                           mouseLeftPress = true;
+                      
                        }
                        else
                            if (event.mouseButton.button == sf::Mouse::Right)
                            {
-                               cout << "Right clicked\n";
-                               if (pn->noiseValues.size() > sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y)//Check if you are clicking on the noise texture
-                               {
-                                   if (pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] - 10 > 0)
-                                   {
-                                       pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] -= 10;
-
-
-
-
-                                       mapM.colorImg(img, pn->noiseValues);
-
-
-                                       noise.loadFromImage(img);
-
-
-                                       sprite.setTexture(noise);
-                                   }
-                               }
+                               mouseRightPress = true;
+                           
                            }
                    }
+
+               }
+
+
+                   if (event.type == sf::Event::MouseButtonReleased)
+                   {
+                       if (event.mouseButton.button == sf::Mouse::Left)
+                       {
+                           mouseLeftPress = false;
+                       }
+
+                       if (event.mouseButton.button == sf::Mouse::Right)
+                       {
+                           mouseRightPress = false;
+                       }
+
+
+                   }
+               
+           }
+           else
+           {
+               if (mouseLeftPress == true)
+               {
+                   mouseLeftPress = false;
+               }
+               if (mouseRightPress == true)
+               {
+                   mouseRightPress = false;
+               }
+           }
+
+           if (enableStreetsEdit == true)
+           {
+               if (event.type == sf::Event::MouseButtonPressed)
+               {                
+                       if (event.mouseButton.button == sf::Mouse::Left)
+                       {
+                           sf::Vector2i position = sf::Mouse::getPosition(window);
+                           sf::Vector2f positionView = window.mapPixelToCoords(position);
+                           Node* potentialNode = roads->RoadNetwork->findNearbyNode(positionView, 10);
+                           if (potentialNode == NULL)
+                           {
+                               if (node1 == NULL)
+                               {
+                                   node1 = new Node();
+                                   node1->endPos = positionView;
+                                   roads->RoadNetwork->AllNodes.push_back(node1);
+                               }
+                               else
+                                   if (node2 == NULL)
+                                   {
+                                       node2 = new Node();
+                                       node2->endPos = positionView;
+                                       roads->RoadNetwork->connectNodes(node1, node2);
+                                       roads->RoadNetwork->AllNodes.push_back(node2);
+                                       node1 = NULL;
+                                       node2 = NULL;
+                                       roads->plots.clear();
+                                       roads->generatePlots(roads->RoadNetwork->AllNodes,NULL,NULL,0);
+                                  
+                                   }
+                           }
+                           else
+                           {
+                               if (node1 == NULL)
+                               {
+                                   node1 = potentialNode;
+                               }
+                               else
+                                   if (node2 == NULL)
+                                   {
+                                       node2 = potentialNode;
+                                       roads->RoadNetwork->connectNodes(node1, node2);
+                                       node1 = NULL;
+                                       node2 = NULL;
+                                       roads->plots.clear();
+                                       roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
+                                   }
+                           }
+                       }
+
+                       
+                    
+                  
+
                }
            }
 
@@ -260,6 +326,99 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
+        if (mouseLeftPress == true)
+        {
+            cout << "Left clicked\n";
+            if (pn->noiseValues.size() > sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y)
+            {
+                
+                {
+                   // cout << "Trying to draw at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y << " " << "vector ID: " << sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y << " new value: " << pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] << '\n';
+                
+                    for (int p = -brushSize; p <= brushSize; p++)
+                    {
+                        for (int q = -brushSize; q <= brushSize; q++)
+                        {
+
+                            sf::Vector2i positionMouse = sf::Mouse::getPosition(window);
+                            sf::Vector2i positionView(window.mapPixelToCoords(positionMouse).x, window.mapPixelToCoords(positionMouse).y);
+
+
+                            int position = (positionView.x + p)* imgWidth + positionView.y + q;
+
+
+                            if (position < pn->noiseValues.size()&&0<=position)
+                            {
+                                if (pn->noiseValues[position] + 10 < 256)
+                                {
+                                    pn->noiseValues[position] += 10;
+                                }
+                            }
+                        }
+                    }
+
+                  //  cout << "Drew at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y << " " << "vector ID: " << sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y << " new value: " << pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] << '\n';
+
+
+
+                    mapM.colorImg(img, pn->noiseValues);
+
+
+                    noise.loadFromImage(img);
+
+
+                    sprite.setTexture(noise);
+
+                    DiscoverBestChunk(mapM, pn->noiseValues, bestValueID, chunkOutline);
+
+                }
+            }
+        }
+        else
+            if(mouseRightPress==true)
+            {
+                cout << "Right clicked\n";
+                if (pn->noiseValues.size() > sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y)//Check if you are clicking on the noise texture
+                {
+                    if (pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] - 10 > 0)
+                    {
+                        for (int p = -brushSize; p <= brushSize; p++)
+                        {
+                            for (int q = -brushSize; q <= brushSize; q++)
+                            {
+                                sf::Vector2i positionMouse = sf::Mouse::getPosition(window);
+                                sf::Vector2i positionView(window.mapPixelToCoords(positionMouse).x, window.mapPixelToCoords(positionMouse).y);
+
+
+                                int position = (positionView.x + p) * imgWidth + positionView.y + q;
+
+                                if (position < pn->noiseValues.size() && 0 <= position)
+                                {
+                                    if (pn->noiseValues[position] - 10 < 256)
+                                    {
+                                        pn->noiseValues[position] -= 10;
+                                    }
+                                }
+                            }
+                        }
+
+                        //  cout << "Drew at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y << " " << "vector ID: " << sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y << " new value: " << pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] << '\n';
+
+
+
+                        mapM.colorImg(img, pn->noiseValues);
+
+
+                        noise.loadFromImage(img);
+
+
+                        sprite.setTexture(noise);
+
+                        DiscoverBestChunk(mapM, pn->noiseValues, bestValueID, chunkOutline);
+                    }
+                }
+            }
       
       
         ImGui::SFML::Update(window, deltaClock.restart());
@@ -520,9 +679,40 @@ int main()
                
             }
         }
+        if (ImGui::InputInt("Brush Size", &brushSize))
+        {
+            if (brushSize < 0)
+            {
+                brushSize = 0;
+            }
+
+            if (brushSize > 10)
+            {
+                brushSize = 10;
+            }
+        }
 
 
         ImGui::Text("Edit street network");
+        if (ImGui::Button(streetEditName.c_str()))
+        {
+            if (enableStreetsEdit == true)
+            {
+                enableStreetsEdit = false;
+                streetEditName = "Edit streets";
+            }
+            else
+            {
+                if (city != NULL)
+                {
+                    delete city;
+                    city = NULL;
+                }
+                enableStreetsEdit = true;
+                streetEditName = "Exit editing";
+
+            }
+        }
 
 
 
@@ -548,7 +738,7 @@ int main()
         city->display();
         if (enableNoiseEdit == true)
         {
-            for (auto element : editorDrawables)
+            for (auto &element : editorDrawables)
             {
                 window.draw(element);
             }

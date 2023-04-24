@@ -242,6 +242,7 @@ public:
 	void generatePlots(std::vector<Node*>AllNodes,Node* previousNode,Node* targetNode ,int depth);
 
 	sf::RenderWindow* refWindow;
+		int roadLength = 20;
 private:
 	vector<vector<Node*>>allPlots;
 	vector<Node*> chosenPlot;
@@ -250,7 +251,7 @@ private:
 
 
 	int* typeOfRoads;
-	int roadLength = 20;
+
 	int currentChunk;
 	int rType = 1;
 	
