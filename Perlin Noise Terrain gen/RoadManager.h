@@ -64,6 +64,62 @@ public:
 		
 	}
 
+	void disconnectNodes(Node* node1, Node* node2)
+	{
+		if (node1->parent == node2)
+		{
+			node1->parent = NULL;
+		}
+		else
+		{
+			for (int i = 0; i < node1->nodeLinks.size(); i++)
+			{
+				if (node1->nodeLinks[i] == node2)
+				{
+					node1->nodeLinks.erase(node1->nodeLinks.begin() + i);
+				}
+			}
+		}
+
+		if (node2->parent == node1)
+		{
+			node2->parent = NULL;
+		}
+		else
+		{
+			for (int i = 0; i < node2->nodeLinks.size(); i++)
+			{
+				if (node2->nodeLinks[i] == node1)
+				{
+					node2->nodeLinks.erase(node2->nodeLinks.begin() + i);
+				}
+			}
+		}
+	}
+
+	void removeNode(Node* node)
+	{
+		if (node->parent != NULL)
+		{
+			disconnectNodes(node, node->parent);
+		}
+
+		for (auto& element : node->nodeLinks)
+		{
+			disconnectNodes(node, element);
+		}
+
+		for (int i = 0; i < AllNodes.size(); i++)
+		{
+			if (AllNodes[i] == node)
+			{
+				AllNodes.erase(AllNodes.begin() + i);
+			}
+		}
+
+		delete node;
+	}
+
 	float distance(int x1, int y1, int x2, int y2)
 	{
 		// Calculating distance
@@ -191,6 +247,67 @@ public:
 		}
 
 		return true;
+	}
+
+
+	vector<Node*> findNodesOfLine(sf::Vector2f point)
+	{
+		point =  sf::Vector2f(round(point.x), round(point.y));
+		vector<Node*> nodes;
+
+		for (auto& element : AllNodes)
+		{
+			if (element->parent !=NULL&&checkIfOnLine(point, element->endPos, element->parent->endPos))
+			{
+				nodes.push_back(element);
+				nodes.push_back(element->parent);
+				return nodes;
+			}
+			for (auto& subElement : element->nodeLinks)
+			{
+				if (checkIfOnLine(point, element->endPos, subElement->endPos))
+				{
+					nodes.push_back(element);
+					nodes.push_back(subElement);
+					return nodes;
+				}
+			}
+		}
+
+		return nodes;
+	}
+
+
+	bool checkIfOnLine(sf::Vector2f point, sf::Vector2f p1, sf::Vector2f p2)
+	{
+		float dxc = point.x - p1.x;
+		float dyc = point.y - p1.y;
+
+		float dxl = p2.x - p1.x;
+		float dyl = p2.y - p1.y;
+
+		float cross = dxc * dyl - dyc * dxl;
+
+		if (cross != 0)
+		{
+			return false;
+		}
+		else
+		{
+			if (abs(dxl) >= abs(dyl))
+				return  dxl > 0 ?
+				p1.x <= point.x && point.x <= p2.x :
+				p2.x <= point.x && point.x <= p1.x;
+			else
+				return dyl > 0 ?
+				p1.y <= point.y && point.y <= p2.y :
+				p2.y <= point.y && point.y <= p1.y;
+		}
+
+
+		return false;
+
+
 	}
 
 	

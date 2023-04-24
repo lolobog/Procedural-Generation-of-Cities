@@ -224,58 +224,106 @@ int main()
 
            if (enableStreetsEdit == true)
            {
-               if (event.type == sf::Event::MouseButtonPressed)
-               {                
+               if (roads != NULL&&roads->RoadNetwork->AllNodes.size()>0)
+               {
+                   if (event.type == sf::Event::MouseButtonPressed)
+                   {
                        if (event.mouseButton.button == sf::Mouse::Left)
                        {
+
+
                            sf::Vector2i position = sf::Mouse::getPosition(window);
                            sf::Vector2f positionView = window.mapPixelToCoords(position);
-                           Node* potentialNode = roads->RoadNetwork->findNearbyNode(positionView, 10);
-                           if (potentialNode == NULL)
+                          
+                           if (positionView.x < imgWidth && positionView.y < imgHeight)
                            {
-                               if (node1 == NULL)
+                               Node* potentialNode = roads->RoadNetwork->findNearbyNode(positionView, 10);
+                               if (potentialNode == NULL)
                                {
-                                   node1 = new Node();
-                                   node1->endPos = positionView;
-                                   roads->RoadNetwork->AllNodes.push_back(node1);
+                                   if (node1 == NULL)
+                                   {
+                                       node1 = new Node();
+                                       node1->endPos = positionView;
+                                       roads->RoadNetwork->AllNodes.push_back(node1);
+                                   }
+                                   else
+                                       if (node2 == NULL)
+                                       {
+                                           node2 = new Node();
+                                           node2->endPos = positionView;
+                                           roads->RoadNetwork->connectNodes(node1, node2);
+                                           roads->RoadNetwork->AllNodes.push_back(node2);
+                                           node1 = NULL;
+                                           node2 = NULL;
+                                           roads->plots.clear();
+                                           roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
+
+                                       }
                                }
                                else
-                                   if (node2 == NULL)
-                                   {
-                                       node2 = new Node();
-                                       node2->endPos = positionView;
-                                       roads->RoadNetwork->connectNodes(node1, node2);
-                                       roads->RoadNetwork->AllNodes.push_back(node2);
-                                       node1 = NULL;
-                                       node2 = NULL;
-                                       roads->plots.clear();
-                                       roads->generatePlots(roads->RoadNetwork->AllNodes,NULL,NULL,0);
-                                  
-                                   }
-                           }
-                           else
-                           {
-                               if (node1 == NULL)
                                {
-                                   node1 = potentialNode;
-                               }
-                               else
-                                   if (node2 == NULL)
+                                   if (node1 == NULL)
                                    {
-                                       node2 = potentialNode;
-                                       roads->RoadNetwork->connectNodes(node1, node2);
-                                       node1 = NULL;
-                                       node2 = NULL;
-                                       roads->plots.clear();
-                                       roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
+                                       node1 = potentialNode;
                                    }
+                                   else
+                                       if (node2 == NULL && potentialNode != node1)
+                                       {
+                                           node2 = potentialNode;
+                                           roads->RoadNetwork->connectNodes(node1, node2);
+                                           node1 = NULL;
+                                           node2 = NULL;
+                                           roads->plots.clear();
+                                           roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
+                                       }
+                               }
                            }
                        }
 
-                       
+                       if (event.mouseButton.button == sf::Mouse::Right)
+                       {
                     
-                  
+                           int detectionRange = 7;
+                           bool lineFound = false;
+                           sf::Vector2i position = sf::Mouse::getPosition(window);
+                          
+                           vector<Node*> nodes;
+                           for (int p = -detectionRange; p <= detectionRange && lineFound==false; p++)
+                           {
+                               for (int q = -detectionRange; q <= detectionRange && lineFound == false; q++)
+                               {
+                                   sf::Vector2i positionNew (position.x+p,position.y+q);
+                                   sf::Vector2f positionView = window.mapPixelToCoords(positionNew);
 
+                                   nodes = roads->RoadNetwork->findNodesOfLine(positionView);
+
+                                   if (nodes.size() > 0)
+                                   {
+                                       roads->RoadNetwork->disconnectNodes(nodes[0], nodes[1]);
+                                       roads->plots.clear();
+                                       roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
+                                       lineFound = true;
+                                   }
+                               }
+                           }
+                           if (lineFound == false)
+                           {
+                               sf::Vector2f potentialNodePos = window.mapPixelToCoords(position);
+                               Node* potentialNode = roads->RoadNetwork->findNearbyNode(potentialNodePos, 7);
+                               if (potentialNode != NULL)
+                               {
+                                   roads->RoadNetwork->removeNode(potentialNode);
+                                   roads->plots.clear();
+                                   roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
+                               }
+                           }
+                       }
+
+
+
+
+
+                   }
                }
            }
 
