@@ -63,7 +63,9 @@ int main()
 {
     
     srand(time(NULL));
-    sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Perlin Noise Terrain", sf::Style::Default, settings);
     ImGui::SFML::Init(window);
 
     
@@ -109,6 +111,7 @@ int main()
     sf::View fullscreen(sf::Vector2f(750, 750), sf::Vector2f(1500, 1500));
 
     sf::View chunkView;
+   //chunkView.setViewport(sf::FloatRect())
     
 
 
@@ -312,7 +315,26 @@ int main()
                                Node* potentialNode = roads->RoadNetwork->findNearbyNode(potentialNodePos, 7);
                                if (potentialNode != NULL)
                                {
+                                   /*if (node1 == potentialNode)
+                                   {
+                                       if (node2 != NULL)
+                                       {
+                                           node1 = node2;
+                                           node2 = NULL;
+                                       }
+                                       else
+                                         node1 == NULL;
+                                   }
+                                   else
+                                       if(node2==potentialNode)
+                                   {
+                                           node2 = NULL;
+                                   }*/
+
+
                                    roads->RoadNetwork->removeNode(potentialNode);
+                                   node1 = NULL;
+                                   node2 = NULL;
                                    roads->plots.clear();
                                    roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
                                }
@@ -744,21 +766,34 @@ int main()
         ImGui::Text("Edit street network");
         if (ImGui::Button(streetEditName.c_str()))
         {
-            if (enableStreetsEdit == true)
+            if (roads != NULL)
             {
-                enableStreetsEdit = false;
-                streetEditName = "Edit streets";
-            }
-            else
-            {
-                if (city != NULL)
+                if (enableStreetsEdit == true)
                 {
-                    delete city;
-                    city = NULL;
+                    enableStreetsEdit = false;
+                    streetEditName = "Edit streets";
+                    if (viewNodes == true)
+                    {
+                        viewNodes = false;
+                        roads->showNodes = false;
+                    }
                 }
-                enableStreetsEdit = true;
-                streetEditName = "Exit editing";
+                else
+                {
+                    if (city != NULL)
+                    {
+                        delete city;
+                        city = NULL;
+                    }
+                    if (viewNodes == false)
+                    {
+                        viewNodes = true;
+                        roads->showNodes = true;
+                    }
+                    enableStreetsEdit = true;
+                    streetEditName = "Exit editing";
 
+                }
             }
         }
 
@@ -771,7 +806,7 @@ int main()
 
         ImGui::End();
 
-        ImGui::ShowDemoWindow();
+       
 
 
 
@@ -782,7 +817,7 @@ int main()
        
        
         roads->drawRoads();
-        city->drawCenters();
+       // city->drawCenters();
         city->display();
         if (enableNoiseEdit == true)
         {

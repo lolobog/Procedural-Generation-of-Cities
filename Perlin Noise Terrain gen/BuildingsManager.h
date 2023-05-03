@@ -101,9 +101,11 @@ class Building
 	string axiom;
 	vector<BuildingNode*>buildingParts;
 	int wallSize ;
+	vector<sf::Vector2f> plotLimits;
 public:
 	Building(sf::Vector2f center, vector<sf::Vector2f> limits,int iterations)
 	{
+		plotLimits = limits;
 		wallSize = findWallSize(limits);
 		//buildingParts.push_back(new BuildingNode(center, 'C', wallSize));
 		buildingParts.push_back(new BuildingNode(NULL,sf::Vector2f(center.x+wallSize/2,center.y+wallSize/2), 'C','A', wallSize));

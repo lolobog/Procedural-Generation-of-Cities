@@ -57,10 +57,12 @@ public:
 
 	void connectNodes(Node* node1, Node* node2)
 	{
-		node1->nodeLinks.push_back(node2);
-		node2->nodeLinks.push_back(node1);
-		cout << "Connected nodes " << node1->nodeID << " TO " << node2->nodeID << '\n';
-		
+		if (node1 != NULL && node2 != NULL)
+		{
+			node1->nodeLinks.push_back(node2);
+			node2->nodeLinks.push_back(node1);
+			cout << "Connected nodes " << node1->nodeID << " TO " << node2->nodeID << '\n';
+		}
 		
 	}
 
@@ -118,6 +120,7 @@ public:
 		}
 
 		delete node;
+		node = NULL;
 	}
 
 	float distance(int x1, int y1, int x2, int y2)
