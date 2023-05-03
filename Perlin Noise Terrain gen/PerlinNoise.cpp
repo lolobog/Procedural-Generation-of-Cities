@@ -206,4 +206,71 @@ std::vector<double> PerlinNoise2D::blendNoise(std::vector<double>noiseCopy, int 
 	return noiseCopy;
 }
 
+std::vector<double> PerlinNoise2D::blendNoiseNew(std::vector<double>newNoise, std::vector<double>oldNoise, int blendLvl)
+{
+	for (int i = 0; i < imgHeight; ++i)
+	{
+		for (int j = 0; j < imgWidth; ++j)
+		{
+			if (newNoise[imgWidth * j + i] != oldNoise[imgWidth * j + i])
+			{
+				// width * row + col
+				double value = 0;
+				int k = 0;
+				int p, q;
+				if (i >= blendLvl && i < imgHeight - blendLvl)
+				{
+					p = i - blendLvl;
+				}
+
+				if (i <= blendLvl)
+				{
+					p = blendLvl - i;
+				}
+
+				if (i >= imgHeight - blendLvl || (i > blendLvl && j <= blendLvl) || (j > blendLvl && i <= imgWidth - blendLvl))
+				{
+					p = i - blendLvl;
+				}
+
+				for (p; p < imgWidth && p <= blendLvl + i; p++)
+				{
+
+					if (j >= blendLvl && j < imgWidth - blendLvl)
+					{
+						q = j - blendLvl;
+					}
+					if (j <= blendLvl)
+					{
+						q = blendLvl - j;
+					}
+
+					if (j > blendLvl)
+					{
+						q = j - blendLvl;
+					}
+
+					if (j >= imgWidth - blendLvl)
+					{
+						q = j - blendLvl;
+					}
+
+					for (q; q < imgHeight && q <= blendLvl + j; q++)
+					{
+						if (p != i && q != j)
+						{
+							value += newNoise[imgWidth * q + p];
+							k++;
+						}
+					}
+
+				}
+
+				newNoise[imgWidth * j + i] = value / k;
+			}
+		}
+	}
+	return newNoise;
+}
+
 

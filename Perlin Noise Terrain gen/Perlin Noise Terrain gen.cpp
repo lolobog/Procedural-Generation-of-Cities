@@ -86,6 +86,7 @@ int main()
     int bestValueID=0;
     bool hasGeneratedNoise = false;
     bool showSelectedChunk = false;
+    vector<double>oldValues;
 
     //Street Network values
     int rulesNumber=5 ;
@@ -111,7 +112,7 @@ int main()
     sf::View fullscreen(sf::Vector2f(750, 750), sf::Vector2f(1500, 1500));
 
     sf::View chunkView;
-   //chunkView.setViewport(sf::FloatRect())
+   chunkView.setViewport(sf::FloatRect(0, 0,0.665, 0.665));
     
 
 
@@ -202,11 +203,29 @@ int main()
                        if (event.mouseButton.button == sf::Mouse::Left)
                        {
                            mouseLeftPress = false;
+                           pn->noiseValues = pn->blendNoiseNew(pn->noiseValues, oldValues, blendLvl);
+                           mapM.colorImg(img, pn->noiseValues);
+
+
+                           noise.loadFromImage(img);
+
+
+                           sprite.setTexture(noise);
+                           oldValues = pn->noiseValues;
                        }
 
                        if (event.mouseButton.button == sf::Mouse::Right)
                        {
                            mouseRightPress = false;
+                           pn->noiseValues = pn->blendNoiseNew(pn->noiseValues, oldValues, blendLvl);
+                           mapM.colorImg(img, pn->noiseValues);
+
+
+                           noise.loadFromImage(img);
+
+
+                           sprite.setTexture(noise);
+                           oldValues = pn->noiseValues;
                        }
 
 
@@ -218,10 +237,12 @@ int main()
                if (mouseLeftPress == true)
                {
                    mouseLeftPress = false;
+                
                }
                if (mouseRightPress == true)
                {
                    mouseRightPress = false;
+
                }
            }
 
@@ -315,23 +336,7 @@ int main()
                                Node* potentialNode = roads->RoadNetwork->findNearbyNode(potentialNodePos, 7);
                                if (potentialNode != NULL)
                                {
-                                   /*if (node1 == potentialNode)
-                                   {
-                                       if (node2 != NULL)
-                                       {
-                                           node1 = node2;
-                                           node2 = NULL;
-                                       }
-                                       else
-                                         node1 == NULL;
-                                   }
-                                   else
-                                       if(node2==potentialNode)
-                                   {
-                                           node2 = NULL;
-                                   }*/
-
-
+                                 
                                    roads->RoadNetwork->removeNode(potentialNode);
                                    node1 = NULL;
                                    node2 = NULL;
@@ -432,6 +437,7 @@ int main()
 
 
 
+
                     mapM.colorImg(img, pn->noiseValues);
 
 
@@ -439,6 +445,8 @@ int main()
 
 
                     sprite.setTexture(noise);
+
+             
 
                     DiscoverBestChunk(mapM, pn->noiseValues, bestValueID, chunkOutline);
 
@@ -475,7 +483,7 @@ int main()
 
                         //  cout << "Drew at:" << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y << " " << "vector ID: " << sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y << " new value: " << pn->noiseValues[sf::Mouse::getPosition(window).x * imgWidth + sf::Mouse::getPosition(window).y] << '\n';
 
-
+                        
 
                         mapM.colorImg(img, pn->noiseValues);
 
@@ -524,7 +532,7 @@ int main()
             city->extractPlotLimits();
             city->findPlotCenters();
             city->create();
-           
+            oldValues = pn->noiseValues;
           
         }
        // ImGui::SameLine();
@@ -553,6 +561,7 @@ int main()
             if (hasGeneratedNoise == false)
                 hasGeneratedNoise = true;
 
+            oldValues = pn->noiseValues;
          
         }
         //ImGui::SameLine();
@@ -608,6 +617,8 @@ int main()
             if (blendLvl < 1)
                 blendLvl = 1;
         }
+     
+
         if (ImGui::Checkbox("Show selected chunk", &showSelectedChunk))
         {
             if (showSelectedChunk == true)

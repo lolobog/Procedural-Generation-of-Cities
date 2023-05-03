@@ -57,38 +57,23 @@ D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain
               _Ty=double
           ]
 D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(65,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(166,74): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(115,57): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(166,59): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(167,74): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(403,40): warning C4018: '>': signed/unsigned mismatch
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(415,135): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(167,59): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-          and
-          [
-              T=int
-          ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(415,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              T=int
-          ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(421,42): warning C4018: '<': signed/unsigned mismatch
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(452,44): warning C4018: '>': signed/unsigned mismatch
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(461,139): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(408,40): warning C4018: '>': signed/unsigned mismatch
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(420,135): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=float
@@ -97,7 +82,7 @@ D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain
           [
               T=int
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(461,97): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(420,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=float
@@ -106,6 +91,26 @@ D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain
           [
               T=int
           ]
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(466,46): warning C4018: '<': signed/unsigned mismatch
-D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(148,15): warning C4101: 'mouseRef': unreferenced local variable
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(426,42): warning C4018: '<': signed/unsigned mismatch
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(460,44): warning C4018: '>': signed/unsigned mismatch
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(469,139): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(469,97): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(474,46): warning C4018: '<': signed/unsigned mismatch
+D:\Procedural-Generation-of-Cities\Perlin Noise Terrain gen\Perlin Noise Terrain gen.cpp(149,15): warning C4101: 'mouseRef': unreferenced local variable
   Perlin Noise Terrain gen.vcxproj -> D:\Procedural-Generation-of-Cities\Debug\Perlin Noise Terrain gen.exe

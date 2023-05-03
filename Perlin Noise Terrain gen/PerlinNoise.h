@@ -25,6 +25,7 @@ public:
 	// Get a noise value, for 2D images z can have any value
 	double noise(double x, double y, double z);
 	std::vector<double> blendNoise(std::vector<double>noiseCopy, int blendLvl);
+	std::vector<double> blendNoiseNew(std::vector<double>newNoise, std::vector<double>oldNoise, int blendLvl);
 	std::vector<double> generateNoise(PerlinNoise2D pn, int octaves, std::vector<double>noiseLevels);
 	void initializeRandomEngine(int* seed);
 	void generateNoiseWithSeed(int* seed);
