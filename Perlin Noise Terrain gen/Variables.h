@@ -2,7 +2,7 @@
 #include <math.h>
 
 const int ScreenWidth = 1500;
-const int ScreenHeight = 1500;
+const int ScreenHeight = 1000;
 const int imgWidth = 1000, const imgHeight = 1000;
 const int chunkWidth = 200, const chunkHeight = 200;
 

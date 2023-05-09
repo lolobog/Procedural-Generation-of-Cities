@@ -2,7 +2,18 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 
+static const char* _IMGUIGetClipboardText(void*)
+{
+    const char* text= sf::Clipboard::getString().toAnsiString().c_str();
+    if (text != nullptr)
+        return text;
+    else
+        return nullptr;
 
+
+}
+
+static void _IMGUISetClipboardText(void*, const char* text) { sf::Clipboard::setString(sf::String(text)); }
 
 int mapVal(float value, float start1, float stop1, float start2, float stop2)
 {
@@ -109,11 +120,12 @@ int main()
     chunkOutline.setOutlineColor(sf::Color::Transparent);
     chunkOutline.setOutlineThickness(10);
 
-    sf::View fullscreen(sf::Vector2f(750, 750), sf::Vector2f(1500, 1500));
+    sf::View fullscreen(sf::Vector2f(ScreenWidth/2, ScreenHeight/2), sf::Vector2f(ScreenWidth, ScreenHeight));
+  
 
     sf::View chunkView;
-   chunkView.setViewport(sf::FloatRect(0, 0,0.665, 0.665));
-    
+   chunkView.setViewport(sf::FloatRect(0, 0,0.665, 1.00));
+   bool showUI=true;
 
 
     sf::Texture noise;
@@ -130,13 +142,18 @@ int main()
 
 
 
+
+      ImGuiIO& io = ImGui::GetIO(); 
+  
+      io.GetClipboardTextFn = _IMGUIGetClipboardText;
+      io.SetClipboardTextFn = _IMGUISetClipboardText;
     /////////////////////
     //Editing variables//
     /////////////////////
 
     //Noise levels
     bool enableNoiseEdit = false;
-    string noiseEditName = "Edit noise levels";
+    string noiseEditName = "Edit terrain";
 
     sf::RectangleShape rect(sf::Vector2f(imgWidth, imgHeight));
     sf::RectangleShape brush(sf::Vector2f(5,5));
@@ -144,7 +161,6 @@ int main()
 
     vector<sf::RectangleShape> editorDrawables;
     editorDrawables.push_back(rect);
-    editorDrawables.push_back(brush);
     brush.setSize(sf::Vector2f(10, 10));
     sf::Mouse mouseRef;
     bool mouseLeftPress = false;
@@ -163,8 +179,7 @@ int main()
     while (window.isOpen())
     {
        
-        editorDrawables[1].setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-        editorDrawables[1].setSize(sf::Vector2f(brushSize + 1, brushSize + 1));
+     
 
 
         sf::Event event;
@@ -501,7 +516,7 @@ int main()
       
         ImGui::SFML::Update(window, deltaClock.restart());
 
-        ImGui::Begin("Generation Window");
+        ImGui::Begin("Generation Window", &showUI,ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoResize);
         ImGui::Text("Generate:");
         if (ImGui::Button("Generate ALL"))
         {
@@ -536,7 +551,7 @@ int main()
           
         }
        // ImGui::SameLine();
-        if (ImGui::Button("Generate Noise"))
+        if (ImGui::Button("Generate Terrain"))
         {
             if (pn != NULL)
             {
@@ -603,8 +618,8 @@ int main()
             city->findPlotCenters();
             city->create();
         }
-        ImGui::Text("Noise Generation parameters:");
-        ImGui::InputInt("Noise seed", &seed);
+        ImGui::Text("Terrain Generation parameters:");
+        ImGui::InputInt("Terrain seed", &seed);
         if (ImGui::InputInt("Noise octaves", &octaves))
         {
             if (octaves > 9)
@@ -612,7 +627,7 @@ int main()
             if (octaves < 1)
                 octaves = 1;
         }
-        if (ImGui::InputInt("Noise blending level", &blendLvl))
+        if (ImGui::InputInt("Blending level", &blendLvl))
         {
             if (blendLvl < 1)
                 blendLvl = 1;
@@ -660,7 +675,7 @@ int main()
             }
         }
 
-        if (ImGui::InputInt("Roads Type: 1.Grid Style; 2.Mixed", &roadsType))
+        if (ImGui::InputInt("Roads Type", &roadsType))
         {
             if (roadsType < 1)
             {
@@ -671,6 +686,8 @@ int main()
                 roadsType = 2;
             }
         }
+    
+        ImGui::Text("1.Grid Style; 2.Mixed");
 
         if (ImGui::Checkbox("View Nodes", &viewNodes))
         {
@@ -732,16 +749,16 @@ int main()
 
 
 
-        ImGui::Begin("Editing Window");
+        ImGui::Begin("Editing Window", &showUI, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
 
 
-        ImGui::Text("Edit noise");
+        ImGui::Text("Terrain Editing");
         if (ImGui::Button(noiseEditName.c_str()))
         {
             if (enableNoiseEdit == true)
             {
                 enableNoiseEdit = false;
-                noiseEditName = "Edit noise levels";
+                noiseEditName = "Edit terrain";
             }
             else
             {
@@ -774,7 +791,7 @@ int main()
         }
 
 
-        ImGui::Text("Edit street network");
+        ImGui::Text("Streets Editing");
         if (ImGui::Button(streetEditName.c_str()))
         {
             if (roads != NULL)
@@ -810,8 +827,6 @@ int main()
 
 
 
-        ImGui::Text("Edit Buildings");
-
 
 
 
@@ -830,7 +845,7 @@ int main()
         roads->drawRoads();
        // city->drawCenters();
         city->display();
-        if (enableNoiseEdit == true)
+        if (enableNoiseEdit == true||enableStreetsEdit)
         {
             for (auto &element : editorDrawables)
             {

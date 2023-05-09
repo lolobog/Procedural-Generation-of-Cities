@@ -68,32 +68,35 @@ public:
 
 	void disconnectNodes(Node* node1, Node* node2)
 	{
-		if (node1->parent == node2)
+		if (node1 != NULL && node2 != NULL)
 		{
-			node1->parent = NULL;
-		}
-		else
-		{
-			for (int i = 0; i < node1->nodeLinks.size(); i++)
+			if (node1->parent == node2)
 			{
-				if (node1->nodeLinks[i] == node2)
+				node1->parent = NULL;
+			}
+			else
+			{
+				for (int i = 0; i < node1->nodeLinks.size(); i++)
 				{
-					node1->nodeLinks.erase(node1->nodeLinks.begin() + i);
+					if (node1->nodeLinks[i] == node2)
+					{
+						node1->nodeLinks.erase(node1->nodeLinks.begin() + i);
+					}
 				}
 			}
-		}
 
-		if (node2->parent == node1)
-		{
-			node2->parent = NULL;
-		}
-		else
-		{
-			for (int i = 0; i < node2->nodeLinks.size(); i++)
+			if (node2->parent == node1)
 			{
-				if (node2->nodeLinks[i] == node1)
+				node2->parent = NULL;
+			}
+			else
+			{
+				for (int i = 0; i < node2->nodeLinks.size(); i++)
 				{
-					node2->nodeLinks.erase(node2->nodeLinks.begin() + i);
+					if (node2->nodeLinks[i] == node1)
+					{
+						node2->nodeLinks.erase(node2->nodeLinks.begin() + i);
+					}
 				}
 			}
 		}

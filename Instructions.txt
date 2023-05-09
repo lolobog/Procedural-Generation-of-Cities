@@ -1,0 +1,61 @@
+++++++++++++++++++++++++++++++++++++++++++++++
+Generation Window:
+++++++++++++++++++++++++++++++++++++++++++++++
+
+
+----------------------------------------------
+Buttons:
+----------------------------------------------
+-Generate ALL: generates all 3 composing parts of the city: terrain, streets and buildings
+
+-Generate terrain: generates the city's terrain
+
+-Generate streets: generate the city's street network (requires terrain to exist)
+
+-Generate buildings: generate the city's buildings (requires both terrain and streets)
+----------------------------------------------
+Terrain Generation parameters:
+----------------------------------------------
+-Terrain seed: A number used in order to generate a certain terrain map, using the same seed will generate the same terrain
+
+-Noise octaves: Increasing/Decreasing this parameter affects the complexity of the terrain generated
+
+-Blending level: The higher the blending level, the smoother transitions between different forms of terrain
+
+-Show selected chunk: Outlines the chunk selected by the algorithm as suitable for building
+
+-Zoom in: Zoom into the selected chunk in order to better view the city
+----------------------------------------------
+Streets Generation parameters:
+----------------------------------------------
+-Rules: Increasing/Decreasing affects the complexity and expansion of the street network
+
+-Roads Type: Select between the two different road styles: 1.Grid Style, 2.Mixed Style
+
+-View Nodes: Shows all the nodes used to generate the street network
+
+-View Plots: Show all the building plots formed by the street network
+----------------------------------------------
+Building Generation parameters:
+----------------------------------------------
+-Complexity: Increasing/Decreasing affects the aspect and complexity of buildings
+
+++++++++++++++++++++++++++++++++++++++++++++++
+Editing Window:
+++++++++++++++++++++++++++++++++++++++++++++++
+
+
+----------------------------------------------
+Terrain Editing:
+----------------------------------------------
+
+-Edit terrain: Enables editing the terrain map, Left Click raises the terrain, Right Click lowers the terrain
+
+-Brush size: Increasing/Decreasing this parameter affects the size of the area being affected while clicking
+
+----------------------------------------------
+Streets Editing:
+----------------------------------------------
+-Edit streets: Enables editing the street network though adding or removing nodes or streets. 
+Left Click: Add a new node or connect two already existing ones
+Right Click: Delete a street or a node
