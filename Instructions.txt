@@ -22,7 +22,7 @@ Terrain Generation parameters:
 
 -Blending level: The higher the blending level, the smoother transitions between different forms of terrain
 
--Show selected chunk: Outlines the chunk selected by the algorithm as suitable for building
+-Show selected chunk: Outlines the chunk selected by the algorithm as suitable for building the city
 
 -Zoom in: Zoom into the selected chunk in order to better view the city
 ----------------------------------------------
