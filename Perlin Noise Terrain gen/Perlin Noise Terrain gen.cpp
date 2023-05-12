@@ -350,11 +350,12 @@ int main()
                                sf::Vector2f potentialNodePos = window.mapPixelToCoords(position);
                                Node* potentialNode = roads->RoadNetwork->findNearbyNode(potentialNodePos, 7);
                                if (potentialNode != NULL)
-                               {
-                                 
+                               {                                 
                                    roads->RoadNetwork->removeNode(potentialNode);
                                    node1 = NULL;
                                    node2 = NULL;
+                                   delete potentialNode;
+                                   potentialNode = nullptr;
                                    roads->plots.clear();
                                    roads->generatePlots(roads->RoadNetwork->AllNodes, NULL, NULL, 0);
                                }
@@ -671,7 +672,7 @@ int main()
 
             if (rulesNumber > 8)
             {
-                rulesNumber = 5;
+                rulesNumber = 8;
             }
         }
 
@@ -755,26 +756,29 @@ int main()
         ImGui::Text("Terrain Editing");
         if (ImGui::Button(noiseEditName.c_str()))
         {
-            if (enableNoiseEdit == true)
+            if (enableStreetsEdit == false)
             {
-                enableNoiseEdit = false;
-                noiseEditName = "Edit terrain";
-            }
-            else
-            {
-                if (roads != NULL)
+                if (enableNoiseEdit == true)
                 {
-                    delete roads;
-                    roads = NULL;
+                    enableNoiseEdit = false;
+                    noiseEditName = "Edit terrain";
                 }
-                if (city != NULL)
+                else
                 {
-                    delete city;
-                    city = NULL;
+                    if (roads != NULL)
+                    {
+                        delete roads;
+                        roads = NULL;
+                    }
+                    if (city != NULL)
+                    {
+                        delete city;
+                        city = NULL;
+                    }
+                    enableNoiseEdit = true;
+                    noiseEditName = "Exit editing";
+
                 }
-                enableNoiseEdit = true;
-                noiseEditName = "Exit editing";
-               
             }
         }
         if (ImGui::InputInt("Brush Size", &brushSize))
@@ -794,7 +798,7 @@ int main()
         ImGui::Text("Streets Editing");
         if (ImGui::Button(streetEditName.c_str()))
         {
-            if (roads != NULL)
+            if (enableNoiseEdit == false)
             {
                 if (enableStreetsEdit == true)
                 {
@@ -803,24 +807,29 @@ int main()
                     if (viewNodes == true)
                     {
                         viewNodes = false;
-                        roads->showNodes = false;
+                        if (roads != NULL)
+                        {
+                            roads->showNodes = false;
+                        }
                     }
                 }
                 else
                 {
-                    if (city != NULL)
+                    if (roads != NULL)
                     {
-                        delete city;
-                        city = NULL;
+                        if (city != NULL)
+                        {
+                            delete city;
+                            city = NULL;
+                        }
+                        if (viewNodes == false)
+                        {
+                            viewNodes = true;
+                            roads->showNodes = true;
+                        }
+                        enableStreetsEdit = true;
+                        streetEditName = "Exit editing";
                     }
-                    if (viewNodes == false)
-                    {
-                        viewNodes = true;
-                        roads->showNodes = true;
-                    }
-                    enableStreetsEdit = true;
-                    streetEditName = "Exit editing";
-
                 }
             }
         }
