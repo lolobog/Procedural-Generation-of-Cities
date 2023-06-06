@@ -1,6 +1,15 @@
 # Procedural-Generation-of-Cities
 This project presents an interface through which users are able to generate cities using procedural generation methods.
 
+Install Instructions:
+1. Install Microsoft Visual Studio 2022 with the Desktop Development with C++ Workload
+2. Download and extract de source files to your computer
+3. Open the "Perlin Noise Terrain gen.sln" file using Microsoft Visual Studio 2022
+4. Build the solution (Build-> Build Solution)
+5. Run the project using the Local Window Debugger
+6. Enjoy and create your own custom citites!
+
+
 The city map is created through a mix of 3 different procedural techniques:
 
 -Terrain: the terrain uses a mixture of Improved Perlin Noise along with a blending function that smoothes out the sudden increases in height
@@ -15,5 +24,5 @@ The city map is created through a mix of 3 different procedural techniques:
 
 The main goal of this application is to offer the ability to create a map containing a city and for the user to be able to edit all the generation aspects to their liking.
 
-Currently the project is still in development!
+
 
